@@ -10,4 +10,4 @@ Hub for everything about the SILL
 
 Deployment: 
 - Prod: https://sill.garronej.dev
-- Dev: https://sill-dev.lab.sspcloud.fr
+- Dev: https://sill-dev.lab.sspcloud.fr (With test data: [etalab/sill-data-test](https://github.com/etalab/sill-data-test)
