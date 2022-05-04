@@ -8,6 +8,13 @@ Hub for everything about the SILL
 - Helm package: [etalab/helm-charts](https://github.com/etalab/helm-charts/tree/main/charts/sill)
 - GitOps deployment: [etalab/paris-sspcloud](https://github.com/etalab/paris-sspcloud/tree/main/apps/sill) (private repo)  
 
-Deployment: 
+## Deployment: 
+
+### SILL
+
 - Prod: https://sill.garronej.dev
 - Dev: https://sill-dev.lab.sspcloud.fr (With test data: [etalab/sill-data-test](https://github.com/etalab/sill-data-test))
+
+## SILL - Embarquement immédiat / Le banc d'essaie
+
+- https://onyxia-sill.lab.sspcloud.fr
