@@ -6,7 +6,7 @@ Hub for everything about the SILL
 - Data (source of truth): [etalab/sill-data](https://github.com/etalab/sill-data)
 - Compiled Data (Generated from data + external sources): [etalab/sill-data#build](https://github.com/etalab/sill-data/tree/build)
 - Helm package: [etalab/helm-charts](https://github.com/etalab/helm-charts/tree/main/charts/sill)
-- Helm charts SILL: [etalab/helm-charts](https://github.com/etalab/helm-charts-sill)
+- Helm charts SILL: [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill)
 - GitOps deployment: [etalab/paris-sspcloud](https://github.com/etalab/paris-sspcloud/tree/main/apps/sill) (private repo)  
 
 ## Deployment: 
