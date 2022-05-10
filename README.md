@@ -13,9 +13,9 @@ Hub for everything about the SILL
 
 ### SILL
 
-- Prod: https://sill.garronej.dev
+- Prod: https://sill.etalab.gouv.fr
 - Dev: https://sill-dev.lab.sspcloud.fr (With test data: [etalab/sill-data-test](https://github.com/etalab/sill-data-test))
 
 ## SILL - Embarquement immédiat / Le banc d'essaie
 
-- https://onyxia-sill.lab.sspcloud.fr
+- https://sill-demo.etalab.gouv.fr
