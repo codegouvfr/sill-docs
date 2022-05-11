@@ -21,9 +21,8 @@ Hub for everything about the application behind the list of recommended free sof
 
 - https://sill-demo.etalab.gouv.fr
 
-## Licence
+## License
 
 Direction interministérielle du numérique and contributors of the repository, 2022.
 
 The documentation in this repository is published under [licence Ouverte 2.0](LICENSES/LICENSE.Etalab-2.0.md).
-
