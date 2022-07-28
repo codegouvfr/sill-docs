@@ -40,6 +40,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own. &#x20;
 
+(In our case my-domain.net is etalab.gouv.fr)
+
 Now you need to get the external address of your cluster, run the command&#x20;
 
 ```bash
@@ -55,48 +57,61 @@ If you see `<pending>`, wait a few seconds and try again. &#x20;
 Once you have the address, create the following DNS records:
 
 ```dns-zone-file
-onyxia.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com. 
-*.lab.my-domain.net  CNAME xxx.elb.eu-west-1.amazonaws.com. 
+sill.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
+sill-auth.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
+sill-demo.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
+*.sill-tmp.my-domain.net  CNAME xxx.elb.eu-west-1.amazonaws.com. 
 ```
+
+{% hint style="info" %}
+Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**. &#x20;
+
+If you do not plan to deploy the platform that enables to test the software in the browser you won't need the sill-demo and \*.sill-tmp record. &#x20;
+{% endhint %}
+
+
 
 If the address you got was an IPv4 (`x.x.x.x`), create a `A` record instead of a CNAME.
 
 If the address you got was ans IPv6 (`y:y:y:y:y:y:y:y`), create a `AAAA` record.
 
-**https://onyxia.my-domain.net** will be the URL for your instance of Onyxia. The URL of the services created by Onyxia are going to look like: **https://\<something>.lab.my-domain.net**&#x20;
-
-{% hint style="info" %}
-You can customise "**onyxia**" and "**lab**" to your liking, for example you could chose **datalab.my-domain.net** and **\*.kub.my-domain.net**.
-{% endhint %}
+* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).&#x20;
+* **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
+* **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
+* **https://\*.sill-tmp.my-domain.net** will be the temporary test urls created by [Onyxia](https://www.onyxia.sh/). &#x20;
 
 ### SSL
 
 In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool then get our ingress controller to use it. &#x20;
 
+If you are already familiar with `certbot` you're probably used to run it on a remote host via SSH. In this case you are expected to run it on your own machine, we'll use the DNS chalenge instead of the HTTP chalenge.
+
 ```bash
 brew install certbot #On Mac, lookup how to install certbot for your OS
 
-#Because we need a wildcard certificate we have to complete the DNS callange.  
+#Because we need a wildcard (*) certificate (for onyxia) we have to complete the DNS callange.  
 sudo certbot certonly --manual --preferred-challenges dns
 
 # When asked for the domains you wish to optains a certificate for enter:
-#   *.lab.my-domain.net onyxia.my-domain.net
+#   sill.sill.ovh sill-auth.sill.ovh sill-demo.sill.ovh *.sill-tmp.sill.ovh
 ```
 
 {% hint style="info" %}
 The obtained certificate needs to be renewed every three month. &#x20;
 
-To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 provider](https://cert-manager.io/docs/configuration/acme/dns01/#delegated-domains-for-dns01) on your cluster but that's out of scope for Onyxia.
+To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 challange provider](https://cert-manager.io/docs/configuration/acme/dns01/) on your cluster. You may need to delegate your DNS Servers to one of the supported [DNS service provider](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
+
+If you are not planing to deploy an Onyxia instance you do not need a wildcard (\*) certificate and thus, in place of DNS01 you can configure [the HTTP01 Ingress solver](https://cert-manager.io/docs/configuration/acme/http01/#configuring-the-http01-ingress-solver) which is much easier to configure. You can follow [this tutorial](https://www.youtube.com/watch?v=hoLUigg4V18).
 {% endhint %}
 
 Now we want to create a Kubernetes secret containing our newly obtained certificate: &#x20;
 
 ```bash
 DOMAIN=my-domain.net
-sudo kubectl create secret tls onyxia-tls \
+sudo kubectl create secret tls sill-tls \
     -n ingress-nginx \
-    --key /etc/letsencrypt/live/lab.$DOMAIN/privkey.pem \
-    --cert /etc/letsencrypt/live/lab.$DOMAIN/fullchain.pem
+    --key /etc/letsencrypt/live/sill.$DOMAIN/privkey.pem \
+    --cert /etc/letsencrypt/live/sill.$DOMAIN/fullchain.pem
 ```
 
 Lastly, we want to tell our ingress controller to use this TLS certificate, to do so run: &#x20;
@@ -108,10 +123,10 @@ kubectl edit deployment ingress-nginx-controller -n ingress-nginx
 This command will open your configured text editor, go to line `56` and add: &#x20;
 
 ```yaml
-        - --default-ssl-certificate=ingress-nginx/onyxia-tls
+        - --default-ssl-certificate=ingress-nginx/sill-tls
 ```
 
-![](<.gitbook/assets/image (1).png>)
+![](<.gitbook/assets/image (11).png>)
 {% endtab %}
 
 {% tab title="Test on your machine" %}
@@ -129,31 +144,38 @@ You'll need to [forward the TCP ports 80 and 443 to your local machine](https://
 
 ### DNS
 
-Let's assume you own the domain name **my-domain.net,** for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
+Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own. &#x20;
+
+(In our case my-domain.net is etalab.gouv.fr)
 
 Get [your internet box routable IP](http://monip.org/) and create the following DNS records: &#x20;
 
 ```dns-zone-file
-onyxia.my-domain.net A <YOUR_IP>
-*.lab.my-domain.net  A <YOUR_IP>
+sill.my-domain.net A <YOUR IP>
+sill-auth.my-domain.net A <YOUR IP>
+sill-demo.my-domain.net A <YOUR IP>
+*.sill-tmp.my-domain.net A <YOUR IP>
 ```
 
 {% hint style="success" %}
-If you have DDNS domain you can create `CNAME` instead example: &#x20;
+If you have DDNS domain you can create `CNAMEs` instead example: &#x20;
 
 ```
-onyxia.my-domain.net CNAME jhon-doe-home.ddns.net.
-*.lab.my-domain.net  CNAME jhon-doe-home.ddnc.net.
+sill.my-domain.net CNAME jhon-doe-home.ddns.net.
+...
 ```
 {% endhint %}
-
-_**https://onyxia.my-domain.net**_ will be the URL for your instance of Onyxia.
-
-The URL of the services created by Onyxia are going to look like: _**https://xxx.lab.my-domain.net**_
 
 {% hint style="info" %}
-You can customise "**onyxia**" and "**lab**" to your liking, for example you could chose **datalab.my-domain.net** and **\*.kub.my-domain.net**.
+Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**. &#x20;
+
+If you do not plan to deploy the platform that enables to test the software in the browser you won't need the sill-demo and \*.sill-tmp record. &#x20;
 {% endhint %}
+
+* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).&#x20;
+* **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
+* **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
+* **https://\*.sill-tmp.my-domain.net** will be the temporary url created by the Onyxia instance for testing the software. &#x20;
 
 ### SSL
 
@@ -166,13 +188,15 @@ brew install certbot #On Mac, lookup how to install certbot for your OS
 sudo certbot certonly --manual --preferred-challenges dns
 
 # When asked for the domains you wish to optains a certificate for enter:
-#   *.lab.my-domain.net onyxia.my-domain.net 
+#   #   sill.sill.ovh sill-auth.sill.ovh sill-demo.sill.ovh *.sill-tmp.sill.ov
 ```
 
 {% hint style="info" %}
 The obtained certificate needs to be renewed every three month. &#x20;
 
-To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 provider](https://cert-manager.io/docs/configuration/acme/dns01/#delegated-domains-for-dns01) on your cluster but that's out of scope for Onyxia. &#x20;
+To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 challange provider](https://cert-manager.io/docs/configuration/acme/dns01/) on your cluster. You may need to delegate your DNS Servers to one of the supported [DNS service provider](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
+
+If you are not planing to deploy an Onyxia instance you do not need a wildcard (\*) certificate and thus, in place of DNS01 you can configure [the HTTP01 Ingress solver](https://cert-manager.io/docs/configuration/acme/http01/#configuring-the-http01-ingress-solver) which is much easier to configure. You can follow [this tutorial](https://www.youtube.com/watch?v=hoLUigg4V18).
 {% endhint %}
 
 Now we want to create a Kubernetes secret containing our newly obtained certificate: &#x20;
@@ -180,10 +204,10 @@ Now we want to create a Kubernetes secret containing our newly obtained certific
 ```bash
 kubectl create namespace ingress-nginx
 DOMAIN=my-domain.net
-sudo kubectl create secret tls onyxia-tls \
+sudo kubectl create secret tls sill-tls \
     -n ingress-nginx \
-    --key /etc/letsencrypt/live/lab.$DOMAIN/privkey.pem \
-    --cert /etc/letsencrypt/live/lab.$DOMAIN/fullchain.pem
+    --key /etc/letsencrypt/live/sill.$DOMAIN/privkey.pem \
+    --cert /etc/letsencrypt/live/sill.$DOMAIN/fullchain.pem
 ```
 
 ### Ingress controller
@@ -194,7 +218,7 @@ We'll install [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) in ou
 cat << EOF > ./ingress-nginx-values.yaml
 controller:
   extraArgs:
-    default-ssl-certificate: "ingress-nginx/onyxia-tls"
+    default-ssl-certificate: "ingress-nginx/sill-tls"
 EOF
 
 helm install ingress-nginx ingress-nginx \
@@ -205,19 +229,13 @@ helm install ingress-nginx ingress-nginx \
 {% endtab %}
 {% endtabs %}
 
-### Installing Onyxia using helm
+### Installing the SILL using helm
 
 In this section we assume that:&#x20;
 
 * You have a Kubernetes cluster and `kubectl` configured
-* **onyxia.my-domain.net** and **\*.lab.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**onyxia**" and "**lab**" to your liking, for example you could chose **datalab.my-domain.net** and **\*.kub.my-domain.net**.
-* You have an ingress controller configured with a default TLS certificate for **\*.lab.my-domain.net** and **onyxia.my-domain.net**. &#x20;
-
-{% hint style="warning" %}
-As of today [the default service catalog](https://github.com/InseeFrLab/helm-charts-datascience) will only work with [ingress-nginx](https://kubernetes.github.io/ingress-nginx/). &#x20;
-
-This will be addressed in the near future. &#x20;
-{% endhint %}
+* **sill.my-domain.net** and **\*.sill-tmp.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your liking, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
+* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**. &#x20;
 
 {% hint style="success" %}
 Through out this guide we make as if everything was instantaneous. In reality if you are testing on a small cluster you will need to wait several minutes after hitting `helm install` for the services to be ready. &#x20;
@@ -231,7 +249,7 @@ Use `kubectl get pods` to see if your pods are up and ready.&#x20;
 
 <summary>(Optional) Make sure that your cluster is ready for Onyxia</summary>
 
-To make sure that your Kubernetes cluster is correctly configured let's deploy a test web app on it before deploying Onyxia.  &#x20;
+To make sure that your Kubernetes cluster is correctly configured let's deploy a test web app on it before deploying the SILL.  &#x20;
 
 <img src=".gitbook/assets/image (19).png" alt="The hello world SPA deployed" data-size="original">
 
@@ -258,76 +276,91 @@ helm uninstall test-spa
 </details>
 
 ```bash
-helm repo add inseefrlab https://inseefrlab.github.io/helm-charts
+helm repo add etalab https://etalab.github.io/helm-charts
 
 DOMAIN=my-domain.net
+SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example )
+SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
 
-cat << EOF > ./onyxia-values.yaml
-ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  hosts:
-    - host: onyxia.$DOMAIN
-ui:
-  image:
-    # Update on your own therm but update!
-    # https://hub.docker.com/r/inseefrlab/onyxia-api/tags
-    version: 0.56.6
-api:
-  image:
-    # Same here
-    # https://hub.docker.com/r/inseefrlab/onyxia-api/tags
-    version: multi-arch
-  env:
-    security.cors.allowed_origins: "http://localhost:3000"
-  regions: 
-    [
-       {
-          "id":"demo",
-          "name":"Demo",
-          "description":"This is a demo region, feel free to try Onyxia !",
-          "services":{
-             "type":"KUBERNETES",
-             "singleNamespace":true,
-             "namespacePrefix":"user-",
-             "usernamePrefix":"oidc-",
-             "groupNamespacePrefix":"projet-",
-             "groupPrefix":"oidc-",
-             "authenticationMode":"admin",
-             "expose":{
-                "domain":"lab.$DOMAIN"
-             },
-             "monitoring":{
-                "URLPattern":"todo"
-             },
-             "cloudshell":{
-                "catalogId":"inseefrlab-helm-charts-datascience",
-                "packageName":"cloudshell"
-             },
-             "initScript":"https://inseefrlab.github.io/onyxia/onyxia-init.sh"
+cat << EOF > ./sill-values.yaml
+sill:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: sill.$DOMAIN
+    tls:
+      - hosts:
+          - sill.$DOMAIN
+        secretName: sill-tls
+  ui:
+    replicaCount: 2
+    image:
+      # Update on your own term, see releases here: 
+      # https://github.com/etalab/sill-web/releases
+      # When you update this version number you must
+      # also update the api.image.version bellow.
+      # See in the following video how to find that the
+      # if you are using ui.image.version: 0.25.18
+      # you should use api.image.version: 0.22.2
+      # https://user-images.githubusercontent.com/6702424/181577434-dbb2c381-4fcf-4c50-b44e-a250339f1f70.mov
+      version: 0.25.17
+    nodeSelector:
+      infra: "true"
+    tolerations:
+      - key: "infra"
+        operator: "Exists"
+    env:
+      CONFIGURATION: |
+         { 
+            "headerLinks": [
+               { 
+                  "label": "code.gouv.fr", 
+                  "iconId": "assuredWorkload", 
+                  "url": "https://code.gouv.fr" 
+               },
+               { 
+                  "label": { "fr": "Embarquement immédiat", "en": "Immediate boarding" }, 
+                  "iconId": "playCircleFilledWhite", 
+                  "url": "https://sill-demo.etalab.gouv.fr/" 
+               }
+            ]
+         }
+    
+  api:
+    replicaCount: 1
+    image:
+      # See comment of ui.image.version to see how to update this field
+      version: 0.22.2
+    nodeSelector:
+      infra: "true"
+    tolerations:
+      - key: "infra"
+        operator: "Exists"
+    env:
+      CONFIGURATION: |
+        {
+          "keycloakParams": {
+            "url": "https://sill-auth.etalab.gouv.fr/auth",
+            "realm": "etalab",
+            "clientId": "sill",
+            "termsOfServices": "https://sill.etalab.gouv.fr/tos_fr.md",
+            "adminPassword": "$KEYCLOAK_PASSWORD" 
           },
-          "data":{
-             "S3":{
-                "URL":"todo",
-                "monitoring":{
-                   "URLPattern":"todo"
-                }
-             }
+          "jwtClaims": {
+            "id": "sub",
+            "email": "email",
+            "agencyName": "agency_name",
+            "locale": "locale"
           },
-          "auth":{
-             "type":"openidconnect"
-          },
-          "location":{
-             "lat":48.8164,
-             "long":2.3174,
-             "name":"Montrouge (France)"
-          }
-       }
-    ]
+          "dataRepoSshUrl": "git@github.com:etalab/sill-data.git",
+          "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
+          "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY" 
+        }
 EOF
 
-helm install onyxia inseefrlab/onyxia -f onyxia-values.yaml
+helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 ```
 
 &#x20;You can now access `https://onyxia.my-domain.net` and start services. Congratulations! 🥳
@@ -376,7 +409,6 @@ helm repo add codecentric https://codecentric.github.io/helm-charts
 DOMAIN=my-domain.net
 POSTGRESQL_PASSWORD=xxxxx #Replace by a strong password, you will never need it.
 # Credentials for logging to https://auth.lab.$DOMAIN/auth
-KEYCLOAK_USER=admin
 KEYCLOAK_PASSWORD=yyyyyy 
 
 cat << EOF > ./keycloak-values.yaml
@@ -409,7 +441,7 @@ extraVolumes: |
     emptyDir: {}
 extraEnv: |
   - name: KEYCLOAK_USER
-    value: $KEYCLOAK_USER
+    value: admin
   - name: KEYCLOAK_PASSWORD
     value: $KEYCLOAK_PASSWORD
   - name: JGROUPS_DISCOVERY_PROTOCOL
