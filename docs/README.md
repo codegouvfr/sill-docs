@@ -363,7 +363,7 @@ EOF
 helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 ```
 
-&#x20;You can now access `https://onyxia.my-domain.net` and start services. Congratulations! 🥳
+&#x20;You can now access `https://sill.my-domain.net`. Congratulations! 🥳
 
 ### Enabling user authentication
 
