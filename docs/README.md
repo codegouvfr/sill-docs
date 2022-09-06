@@ -242,7 +242,7 @@ Through out this guide we make as if everything was instantaneous. In reality if
 
 Use `kubectl get pods` to see if your pods are up and ready.&#x20;
 
-![](<.gitbook/assets/image (2).png>)
+![](<.gitbook/assets/image (3).png>)
 {% endhint %}
 
 <details>
@@ -279,7 +279,7 @@ helm uninstall test-spa
 helm repo add etalab https://etalab.github.io/helm-charts
 
 DOMAIN=my-domain.net
-SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example )
+SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example, it's a SSH key that enable to git clone your sill-data repo )
 SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
 
 cat << EOF > ./sill-values.yaml
@@ -428,8 +428,8 @@ extraInitContainers: |
         # There is a custom theme published alongside every onyxia-web release
         # The version of the Keycloak theme and the version of onyxia-web don't need 
         # to match but you should update the theme from time to time.  
-        # https://github.com/InseeFrLab/onyxia-web/releases
-        curl -L -f -S -o /extensions/onyxia-web.jar https://github.com/InseeFrLab/onyxia-web/releases/download/v0.56.6/standalone-keycloak-theme.jar
+        # https://github.com/etalab/sill-web/releases
+        curl -L -f -S -o /extensions/sill-web.jar https://github.com/etalab/sill-web/releases/download/v0.25.28/standalone-keycloak-theme.jar
     volumeMounts:
       - name: extensions
         mountPath: /extensions
@@ -503,112 +503,75 @@ You can now login to the **administration console** of **https://auth.lab.my-dom
       6. _Password_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
       7. When clicking "save" you'll be asked for a test email, you have to provide one that correspond **to a pre-existing user** or you will get a silent error and the credentials won't be saved.
    4. On the tab Themes
-      1. _Login theme_: **onyxia-web** (you can also select the login theme on a per client basis)
-      2. _Email theme_: **onyxia-web**
+      1. _Login theme_: **sill-web** (you can also select the login theme on a per client basis)
+      2. _Email theme_: **sill-web**
    5. On the tab **Localization**
       1. _Internationalization_: **Enabled**
       2. _Supported locales_: \<Select the languages you wish to support>
-2. Create a client called "onyxia"
-   1. _Root URL_: **https://onyxia.my-domain.net/**
-   2. _Valid redirect URIs_: **https://onyxia.my-domain.net/\***
+2. Create a client called "sill"
+   1. _Root URL_: **https://sill-auth.my-domain.net/**
+   2. _Valid redirect URIs_: **https://sill.my-domain.net/\***
    3. _Web origins_: **\***
-   4. Login theme: **onyxia-web**
 3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
 
-Now you want to ensure that the username chosen by your users complies with Onyxia requirement (only alphanumerical characters) and define a list of email domain allowed to register to your service. &#x20;
+Now you want to define a list of email domain allowed to register to your service. &#x20;
 
 Go to **Realm Settings** (on the left panel) -> Tab **User Profile** (this tab shows up only if User Profile is enabled in the General tab and you can enable user profile only if you have started Keycloak with `-Dkeycloak.profile=preview)` -> **JSON Editor**.
 
 Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that. &#x20;
 
-```diff
-{
-  "attributes": [
-    {
-      "name": "username",
-      "displayName": "${username}",
-      "validations": {
-        "length": {
-          "min": 3,
-          "max": 255
-        },
+<pre class="language-diff"><code class="lang-diff"> {
+   "attributes": [
+     {
+       "name": "email",
+       "displayName": "${email}",
+       "validations": {
+         "email": {},
+         "length": {
+           "max": 255
+         },
 +       "pattern": {
-+         "error-message": "${alphanumericalCharsOnly}",
-+         "pattern": "^[a-zA-Z0-9]*$"
-+       },
-        "username-prohibited-characters": {}
-      }
-    },
-    {
-      "name": "email",
-      "displayName": "${email}",
-      "validations": {
-        "email": {},
-+       "pattern": {
-+         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
-+       },
-        "length": {
-          "max": 255
-        }
-      }
-    },
-    {
-      "name": "firstName",
-      "displayName": "${firstName}",
-      "required": {
-        "roles": [
-          "user"
-        ]
-      },
-      "permissions": {
-        "view": [
-          "admin",
-          "user"
-        ],
-        "edit": [
-          "admin",
-          "user"
-        ]
-      },
-      "validations": {
-        "length": {
-          "max": 255
-        },
-        "person-name-prohibited-characters": {}
-      }
-    },
-    {
-      "name": "lastName",
-      "displayName": "${lastName}",
-      "required": {
-        "roles": [
-          "user"
-        ]
-      },
-      "permissions": {
-        "view": [
-          "admin",
-          "user"
-        ],
-        "edit": [
-          "admin",
-          "user"
-        ]
-      },
-      "validations": {
-        "length": {
-          "max": 255
-        },
-        "person-name-prohibited-characters": {}
-      }
-    }
-  ]
-}
-```
+<strong>+         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
+</strong>+      }
+       },
+       "permissions": {
+         "view": [],
+         "edit": []
+       },
+       "selector": {
+         "scopes": []
+       }
+     },
+<strong>+    {
+</strong>+      "selector": {
++        "scopes": []
++      },
++      "permissions": {
++        "view": [
++          "user",
++          "admin"
++        ],
++        "edit": [
++          "user",
++          "admin"
++        ]
++      },
++      "name": "agencyName",
++      "displayName": "${agencyName}",
++      "validations": {},
++      "required": {
++        "roles": [
++          "user"
++        ],
++        "scopes": []
++      }
++   }
+   ]
+ }</code></pre>
 
-Now our Keycloak server is fully configured we just need to update our Onyxia deployment to let it know about it. &#x20;
+Now our Keycloak server is fully configured we just need to update our sill deployment to let it know about it. &#x20;
 
-Update the `onyxia-values.yaml` file  that you created previously, don't forget to replace all the occurence of **my-domain.net** by your actual domain. &#x20;
+Update the `sill-values.yaml` file  that you created previously, don't forget to replace all the occurence of **my-domain.net** by your actual domain. &#x20;
 
 Don't forget as well to remplace the terms of services of the [sspcloud](https://www.sspcloud.fr) by your own terms of services. CORS should be enabled on those `.md` links (`Access-Control-Allow-Origin: *`).
 
