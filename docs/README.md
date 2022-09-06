@@ -573,7 +573,7 @@ Now our Keycloak server is fully configured we just need to update our sill depl
 
 Update the `sill-values.yaml` file  that you created previously, don't forget to replace all the occurence of **my-domain.net** by your actual domain. &#x20;
 
-Don't forget as well to remplace the terms of services of the [sspcloud](https://www.sspcloud.fr) by your own terms of services. CORS should be enabled on those `.md` links (`Access-Control-Allow-Origin: *`).
+Don't forget as well to remplace the terms of services of [etalab](https://sill.etalab.gouv.fr/tos\_fr.md) by your own terms of services. CORS should be enabled on those `.md` links (`Access-Control-Allow-Origin: *`).
 
 ```diff
 +serviceAccount:
