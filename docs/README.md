@@ -247,7 +247,7 @@ Use `kubectl get pods` to see if your pods are up and ready.&#x20;
 
 <details>
 
-<summary>(Optional) Make sure that your cluster is ready for Onyxia</summary>
+<summary>(Optional) Make sure that your cluster is ready for the SILL</summary>
 
 To make sure that your Kubernetes cluster is correctly configured let's deploy a test web app on it before deploying the SILL.  &#x20;
 
@@ -369,37 +369,7 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 At the moment there is no authentication process, everyone can access our platform and and start services. &#x20;
 
-Let's setup Keycloak to enable users to create account and login to our Onyxia. &#x20;
-
-<details>
-
-<summary>Notes if you already have a Keycloak server</summary>
-
-If you already have a Keycloak server it is up to you to pick from this guide what is rellevent to you. &#x20;
-
-Main takeway is that you probably want to load the Onyxia custom Keycloak theme and enable `-Dkeycloak.profile=preview` in order to be able to enforce that usernames are well formatted and define an accept list of email domains allowed to create account on your Onyxia instance. &#x20;
-
-You probably want to enable [Terms and Conditions as required actions](https://docs.keycloakify.dev/terms-and-conditions).
-
-That out of the way, note that you can configure onyxia-web to integrate with your existing Keycloak server, you just need to set some dedicated environment variable in the `values.yaml` of the onyxia helm chart. Example: &#x20;
-
-```yaml
- ui:
-   image:
-     version: "0.56.5"
-  env:
-    # Available env are documented here: https://github.com/InseeFrLab/onyxia-web/blob/main/.env
-    KEYCLOAK_URL: https://auth.lab.my-domain.net/auth
-    KEYCLOAK_CLIENT_ID: onyxia
-    KEYCLOAK_REALM: datalab
-    JWT_EMAIL_CLAIM: email
-    JWT_FAMILY_NAME_CLAIM: family_name
-    JWT_FIRST_NAME_CLAIM: given_name
-    JWT_USERNAME_CLAIM: preferred_username
-    JWT_LOCALE_CLAIM: locale
-```
-
-</details>
+Let's setup Keycloak to enable users to create account and login to our SILL. &#x20;
 
 For deploying our Keycloak we use [codecentric's helm chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak). &#x20;
 
@@ -659,6 +629,3 @@ helm upgrade onyxia inseefrlab/onyxia -f onyxia-values.yaml
 
 Now your users should be able to create account, log-in, and start services on their own Kubernetes namespace.
 
-### Minio, Vault
-
-TODO; [Refer to the legacy documentation.](https://github.com/InseeFrLab/onyxia/tree/main/step-by-step#set-up-authentication-openidconnect)
