@@ -2,33 +2,42 @@
 
 This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
 
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ### The Data Git repository
 
 #### Context
 
-The data are stored in a separate Git repo that serves as source of truth for the SILL Web Application, a database of sort. &#x20;
+The data are stored in [a separate Git repo](https://github.com/etalab/sill-data-template) that serves as source of truth for the SILL Web Application, a database of sort. &#x20;
 
-This repo hold JSON files that describes what software and services are in the SILL. &#x20;
+This repo hold JSON files that describes what [software](https://github.com/etalab/sill-data-template/blob/main/software.json) and [services](https://github.com/etalab/sill-data-template/blob/main/service.json) are in the SILL. &#x20;
 
 There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way is true as well. &#x20;
 
 On the main branch of the Data repo are stored only the the informations about the software that are directly related with the SILL and can't be found elswhere. &#x20;
 
-There is an other branch, the `build` banch that hold all the informations of the main branch plus informations that have been scrapped from multiple sources like [Wikidata.org](https://www.wikidata.org/wiki/Wikidata:Main\_Page) and [https://comptoir-du-libre.org](https://comptoir-du-libre.org/en/).&#x20;
+There is [an other branch, the `build` banch](https://github.com/etalab/sill-data-template/tree/build) that holds all the informations of the main branch plus informations that have been scrapped from multiple sources like [Wikidata.org](https://www.wikidata.org/wiki/Wikidata:Main\_Page) and [https://comptoir-du-libre.org](https://comptoir-du-libre.org/en/).&#x20;
 
-The scrapping and update of the build branch is performed once every four hour and whenever there is a commit on the main branch. &#x20;
+The scrapping and update of the build branch is performed [once every four hour ](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L7)and [whenever there is a commit on the main branch](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L2-L5). &#x20;
 
 The data repo can be private or public and does not need to be hosted on GitHub. &#x20;
 
 #### Instantiating your Data Git Repository
 
-You want to start from etalab/sill-data-template
+First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using). &#x20;
 
-* Click on the green button "use this template"
-* Check "Include all branches"
-*
+* Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
+* Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`. &#x20;
 
+Now you want to start from [etalab/sill-data-template](https://github.com/etalab/sill-data-template)
 
+* Click on the green button "_use this template_"
+* Check "_Include all branches_"
+* Navigate to the repo setting, security -> Secrets -> Actions, create two repository secrets:
+  * `SSH_PRIVATE_KEY_NAME` whith content `id_ed25519` (or whatever you have)
+  * `SSH_PRIVATE_KEY`_`NAME` and pass the content of_ `~/.ssh/id_ed25519` (it starts with `-----BEGIN OPENSSH PRIVATE KEY-----`)
+
+Congratulation! 🥳 You now have a self managed repo. If you add a software to software.json [compiledData.json](https://github.com/etalab/sill-data-template/blob/build/compiledData.json) and [compiledData\_withoutReferents.json](https://github.com/etalab/sill-data-template/blob/build/compiledData\_withoutReferents.json) are going to be automatically updated.
 
 ### Provision a Kubernetes cluster
 
@@ -262,7 +271,7 @@ helm install ingress-nginx ingress-nginx \
 In this section we assume that:&#x20;
 
 * You have a Kubernetes cluster and `kubectl` configured
-* **sill.my-domain.net** and **\*.sill-tmp.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your liking, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
+* **sill.my-domain.net** and **\*.sill-tmp.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
 * You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**. &#x20;
 
 {% hint style="success" %}
@@ -307,7 +316,7 @@ helm uninstall test-spa
 helm repo add etalab https://etalab.github.io/helm-charts
 
 DOMAIN=my-domain.net
-SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example, it's a SSH key that enable to git clone your sill-data repo )
+SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example, generated earlyer )
 SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
 
 cat << EOF > ./sill-values.yaml
