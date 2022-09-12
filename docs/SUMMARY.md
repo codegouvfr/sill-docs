@@ -1,7 +1,8 @@
 # Table of contents
 
-* [🏁 Deploying](README.md)
-* [👨💻 👨💻 Contributing](contributing/README.md)
+* [🎯 Project overview](README.md)
+* [🏁 Deploying](<README (1).md>)
+* [👨💻 Contributing](contributing/README.md)
   * [🔬 Help maintain the catalog of service](contributing/help-maintain-the-catalog-of-service.md)
   * [🐲 sill-web](contributing/sill-web/README.md)
     * [🚀 Quick start](contributing/sill-web/quick\_start.md)
