@@ -413,7 +413,7 @@ helm install keycloak codecentric/keycloak -f keycloak-values.yaml
 
 You can now login to the **administration console** of **https://sill-auth.my-domain.net** and login using the credentials you have defined with `KEYCLOAK_USER` and `KEYCLOAK_PASSWORD`.
 
-1. Create a realm called "datalab" (or something else), go to **Realm settings**
+1. Create a realm called "etalab" (or something else), go to **Realm settings**
    1. On the tab General
       1. _User Profile Enabled_: **On**
    2. On the tab **login**
@@ -532,8 +532,11 @@ Go to Identity Providers -> Agent Connect -> Mappers -> create
 ```bash
 
 DOMAIN=my-domain.net
-SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example, generated earlyer )
+SSH_PRIVATE_KEY_NAME=id_ed25521 # For example, generated earlyer
 SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
+DATA_REPO_SSH_URL="git@github.com:etalab/sill-data.git" # Replace by the repo you created earlyer
+KEYCLOAK_PASSWORD=yyyyyy # Make sure it's the same that the one you defined earlyer
+
 
 cat << EOF > ./sill-values.yaml
 sill:
@@ -542,23 +545,15 @@ sill:
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-      - host: sill.$DOMAIN
+      - host: sill.etalab.gouv.fr
     tls:
       - hosts:
-          - sill.$DOMAIN
+          - sill.etalab.gouv.fr
         secretName: sill-tls
   ui:
     replicaCount: 2
     image:
-      # Update on your own term, see releases here: 
-      # https://github.com/etalab/sill-web/releases
-      # When you update this version number you must
-      # also update the api.image.version bellow.
-      # See in the following video how to find that the
-      # if you are using ui.image.version: 0.25.18
-      # you should use api.image.version: 0.22.2
-      # https://user-images.githubusercontent.com/6702424/181577434-dbb2c381-4fcf-4c50-b44e-a250339f1f70.mov
-      version: 0.25.17
+      version: 0.25.40
     nodeSelector:
       infra: "true"
     tolerations:
@@ -580,12 +575,12 @@ sill:
                }
             ]
          }
+
     
   api:
     replicaCount: 1
     image:
-      # See comment of ui.image.version to see how to update this field
-      version: 0.22.2
+      version: 0.22.6
     nodeSelector:
       infra: "true"
     tolerations:
@@ -595,7 +590,7 @@ sill:
       CONFIGURATION: |
         {
           "keycloakParams": {
-            "url": "https://sill-auth.etalab.gouv.fr/auth",
+            "url": "https://sill-auth.$DOMAIN/auth",
             "realm": "etalab",
             "clientId": "sill",
             "termsOfServices": "https://sill.etalab.gouv.fr/tos_fr.md",
@@ -607,7 +602,7 @@ sill:
             "agencyName": "agency_name",
             "locale": "locale"
           },
-          "dataRepoSshUrl": "git@github.com:etalab/sill-data.git",
+          "dataRepoSshUrl": "$DATA_REPO_SSH_URL",
           "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
           "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY" 
         }
@@ -618,5 +613,6 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 &#x20;You can now access `https://sill.my-domain.net`. Congratulations! 🥳
 
-###
+### Onyxia instance for testing the softwares
 
+TODO
