@@ -39,7 +39,18 @@ Now you want to start from [etalab/sill-data-template](https://github.com/etalab
 
 Congratulation! 🥳 You now have a self managed repo. If you add a software to software.json [compiledData.json](https://github.com/etalab/sill-data-template/blob/build/compiledData.json) and [compiledData\_withoutReferents.json](https://github.com/etalab/sill-data-template/blob/build/compiledData\_withoutReferents.json) are going to be automatically updated.
 
-### Provision a Kubernetes cluster
+{% hint style="warning" %}
+Note that the CI is always using [the latest version of the scrapping script](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L13). You probably want to keep in sync with the version of etalab/sill-api you have in prod and (we depoly it later in this guide). &#x20;
+
+Example:&#x20;
+
+```diff
+-npx -y -p sill-api@latest build-data
++npx -y -p sill-api@0.22.6 build-data
+```
+{% endhint %}
+
+### Provison a Kubernetes cluster
 
 First you'll need a Kubernetes cluster.  If you have one already you can skip this section.
 
