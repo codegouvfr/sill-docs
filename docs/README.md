@@ -1,6 +1,34 @@
-# 🏁 Installing
+# 🏁 Deploying
 
 This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
+
+### The Data Git repository
+
+#### Context
+
+The data are stored in a separate Git repo that serves as source of truth for the SILL Web Application, a database of sort. &#x20;
+
+This repo hold JSON files that describes what software and services are in the SILL. &#x20;
+
+There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way is true as well. &#x20;
+
+On the main branch of the Data repo are stored only the the informations about the software that are directly related with the SILL and can't be found elswhere. &#x20;
+
+There is an other branch, the `build` banch that hold all the informations of the main branch plus informations that have been scrapped from multiple sources like [Wikidata.org](https://www.wikidata.org/wiki/Wikidata:Main\_Page) and [https://comptoir-du-libre.org](https://comptoir-du-libre.org/en/).&#x20;
+
+The scrapping and update of the build branch is performed once every four hour and whenever there is a commit on the main branch. &#x20;
+
+The data repo can be private or public and does not need to be hosted on GitHub. &#x20;
+
+#### Instantiating your Data Git Repository
+
+You want to start from etalab/sill-data-template
+
+* Click on the green button "use this template"
+* Check "Include all branches"
+*
+
+
 
 ### Provision a Kubernetes cluster
 
@@ -242,7 +270,7 @@ Through out this guide we make as if everything was instantaneous. In reality if
 
 Use `kubectl get pods` to see if your pods are up and ready.&#x20;
 
-![](<.gitbook/assets/image (3).png>)
+![](<.gitbook/assets/image (2).png>)
 {% endhint %}
 
 <details>
