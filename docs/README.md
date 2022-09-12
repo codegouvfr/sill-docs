@@ -2,7 +2,7 @@
 
 This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 ### The Data Git repository
 
@@ -277,13 +277,11 @@ helm install ingress-nginx ingress-nginx \
 {% endtab %}
 {% endtabs %}
 
-### Installing the SILL using helm
-
-In this section we assume that:&#x20;
+At this point we assume that:&#x20;
 
 * You have a Kubernetes cluster and `kubectl` configured
 * **sill.my-domain.net** and **\*.sill-tmp.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
-* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**. &#x20;
+* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**.&#x20;
 
 {% hint style="success" %}
 Through out this guide we make as if everything was instantaneous. In reality if you are testing on a small cluster you will need to wait several minutes after hitting `helm install` for the services to be ready. &#x20;
@@ -323,8 +321,215 @@ helm uninstall test-spa
 
 </details>
 
+### Installing Keycloak
+
+Let's setup Keycloak to enable users to create account and login to our SILL. &#x20;
+
+For deploying our Keycloak we use [codecentric's helm chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak). &#x20;
+
 ```bash
-helm repo add etalab https://etalab.github.io/helm-charts
+helm repo add codecentric https://codecentric.github.io/helm-charts
+
+DOMAIN=my-domain.net
+POSTGRESQL_PASSWORD=xxxxx #Replace by a strong password, you will never need it.
+# Credentials for logging to https://auth.lab.$DOMAIN/auth
+KEYCLOAK_PASSWORD=yyyyyy 
+
+cat << EOF > ./keycloak-values.yaml
+image:
+  # We use the legacy variant of the image until codecentric update it's helm chart
+  tag: "18.0.2-legacy"
+replicas: 1
+extraInitContainers: |
+  - name: realm-ext-provider
+    image: curlimages/curl
+    imagePullPolicy: IfNotPresent
+    command:
+      - sh
+    args:
+      - -c
+      - |
+        # Extention for AgentConnect (optional)
+        curl -L -f -S -o /extensions/keycloak-franceconnect-4.1.0.jar https://github.com/InseeFr/Keycloak-FranceConnect/releases/download/4.1.0/keycloak-franceconnect-4.1.0.jar
+        # There is a custom theme published alongside every onyxia-web release
+        # The version of the Keycloak theme and the version of onyxia-web don't need 
+        # to match but you should update the theme from time to time.  
+        # https://github.com/etalab/sill-web/releases
+        curl -L -f -S -o /extensions/sill-web.jar https://github.com/etalab/sill-web/releases/download/v0.25.28/standalone-keycloak-theme.jar
+    volumeMounts:
+      - name: extensions
+        mountPath: /extensions
+extraVolumeMounts: |
+  - name: extensions
+    mountPath: /opt/jboss/keycloak/standalone/deployments
+extraVolumes: |
+  - name: extensions
+    emptyDir: {}
+extraEnv: |
+  - name: KEYCLOAK_USER
+    value: admin
+  - name: KEYCLOAK_PASSWORD
+    value: $KEYCLOAK_PASSWORD
+  - name: JGROUPS_DISCOVERY_PROTOCOL
+    value: kubernetes.KUBE_PING
+  - name: KUBERNETES_NAMESPACE
+    valueFrom:
+     fieldRef:
+       apiVersion: v1
+       fieldPath: metadata.namespace
+  - name: KEYCLOAK_STATISTICS
+    value: "true"
+  - name: CACHE_OWNERS_COUNT
+    value: "2"
+  - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+    value: "2"
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: JAVA_OPTS
+    value: >-
+      -Dkeycloak.profile=preview -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0 -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true 
+ingress:
+  enabled: true
+  servicePort: http
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    ## Resolve HTTP 502 error using ingress-nginx:
+    ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+  rules:
+    - host: "auth.lab.$DOMAIN"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - auth.lab.$DOMAIN
+postgresql:
+  postgresqlPassword: $POSTGRESQL_PASSWORD
+EOF
+
+helm install keycloak codecentric/keycloak -f keycloak-values.yaml
+```
+
+You can now login to the **administration console** of **https://sill-auth.my-domain.net** and login using the credentials you have defined with `KEYCLOAK_USER` and `KEYCLOAK_PASSWORD`.
+
+1. Create a realm called "datalab" (or something else), go to **Realm settings**
+   1. On the tab General
+      1. _User Profile Enabled_: **On**
+   2. On the tab **login**
+      1. _User registration_: **On**
+      2. _Forgot password_: **On**
+      3. _Remember me_: **On**
+   3. On the tab **email,** we give an example with **** [AWS SES](https://aws.amazon.com/ses/), if you don't have a SMTP server at hand you can skip this by going to **Authentication** (on the left panel) -> Tab **Required Actions** -> Uncheck "set as default action" **Verify Email**. Be aware that with email verification disable, anyone will be able to sign up to your service.
+      1. _From_: **noreply@lab.my-domain.net**
+      2. _Host_: **email-smtp.us-east-2.amazonaws.com**
+      3. _Port_: **465**
+      4. _Authentication_: **enabled**
+      5. _Username_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+      6. _Password_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
+      7. When clicking "save" you'll be asked for a test email, you have to provide one that correspond **to a pre-existing user** or you will get a silent error and the credentials won't be saved.
+   4. On the tab Themes
+      1. _Login theme_: **sill-web** (you can also select the login theme on a per client basis)
+      2. _Email theme_: **sill-web**
+   5. On the tab **Localization**
+      1. _Internationalization_: **Enabled**
+      2. _Supported locales_: \<Select the languages you wish to support>
+2. Create a client called "sill"
+   1. _Root URL_: **https://sill-auth.my-domain.net/**
+   2. _Valid redirect URIs_: **https://sill.my-domain.net/\***
+   3. _Web origins_: **\***
+3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
+
+Now you want to define a list of email domain allowed to register to your service. &#x20;
+
+Go to **Realm Settings** (on the left panel) -> Tab **User Profile** (this tab shows up only if User Profile is enabled in the General tab and you can enable user profile only if you have started Keycloak with `-Dkeycloak.profile=preview)` -> **JSON Editor**.
+
+Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that. &#x20;
+
+<pre class="language-diff"><code class="lang-diff"> {
+   "attributes": [
+     {
+       "name": "email",
+       "displayName": "${email}",
+       "validations": {
+         "email": {},
+         "length": {
+           "max": 255
+         },
++       "pattern": {
+<strong>+         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
+</strong>+      }
+       },
+       "permissions": {
+         "view": [],
+         "edit": []
+       },
+       "selector": {
+         "scopes": []
+       }
+     },
+<strong>+    {
+</strong>+      "selector": {
++        "scopes": []
++      },
++      "permissions": {
++        "view": [
++          "user",
++          "admin"
++        ],
++        "edit": [
++          "user",
++          "admin"
++        ]
++      },
++      "name": "agencyName",
++      "displayName": "${agencyName}",
++      "validations": {},
++      "required": {
++        "roles": [
++          "user"
++        ],
++        "scopes": []
++      }
++   }
+   ]
+ }</code></pre>
+
+Now our Keycloak server is configured.
+
+#### Enabeling AgentConnect
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
+
+Follow the instructions in the readme of [InseeFr/Keycloak-FranceConnect](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect). &#x20;
+
+Theses are the information that you'll need to give to the France Connect team to receive your credentials:&#x20;
+
+```
+Nom du fournisseur de service: "Socle interministériel de logiciels libres" ( ou SILL pour les intimes )
+URL de redirection de connexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint
+URL de redirection de déconnexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint/logout_response
+URL du bouton affichant AgentConnect: 
+Ici je ne suis pas sûr de comprendre ce que vous me demandez.
+Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.etalab.gouv.fr/
+Scopes désirés: given_name usual_name email organizational_unit
+Algorithme de la signature des userinfos: ES256
+Algorithme de la signature de l'id token: ES256
+```
+
+You'll also need to create a mapper for organizational\_unit -> agencyName. &#x20;
+
+Go to Identity Providers -> Agent Connect -> Mappers -> create
+
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+
+### Instantiating the web app
+
+&#x20;helm repo add etalab https://etalab.github.io/helm-charts
+
+```bash
 
 DOMAIN=my-domain.net
 SSH_PRIVATE_KEY_NAME=id_ed25521 # ( For example, generated earlyer )
@@ -413,267 +618,5 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 &#x20;You can now access `https://sill.my-domain.net`. Congratulations! 🥳
 
-### Enabling user authentication
-
-At the moment there is no authentication process, everyone can access our platform and and start services. &#x20;
-
-Let's setup Keycloak to enable users to create account and login to our SILL. &#x20;
-
-For deploying our Keycloak we use [codecentric's helm chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak). &#x20;
-
-```bash
-helm repo add codecentric https://codecentric.github.io/helm-charts
-
-DOMAIN=my-domain.net
-POSTGRESQL_PASSWORD=xxxxx #Replace by a strong password, you will never need it.
-# Credentials for logging to https://auth.lab.$DOMAIN/auth
-KEYCLOAK_PASSWORD=yyyyyy 
-
-cat << EOF > ./keycloak-values.yaml
-image:
-  # We use the legacy variant of the image until codecentric update it's helm chart
-  tag: "18.0.2-legacy"
-replicas: 1
-extraInitContainers: |
-  - name: realm-ext-provider
-    image: curlimages/curl
-    imagePullPolicy: IfNotPresent
-    command:
-      - sh
-    args:
-      - -c
-      - |
-        # There is a custom theme published alongside every onyxia-web release
-        # The version of the Keycloak theme and the version of onyxia-web don't need 
-        # to match but you should update the theme from time to time.  
-        # https://github.com/etalab/sill-web/releases
-        curl -L -f -S -o /extensions/sill-web.jar https://github.com/etalab/sill-web/releases/download/v0.25.28/standalone-keycloak-theme.jar
-    volumeMounts:
-      - name: extensions
-        mountPath: /extensions
-extraVolumeMounts: |
-  - name: extensions
-    mountPath: /opt/jboss/keycloak/standalone/deployments
-extraVolumes: |
-  - name: extensions
-    emptyDir: {}
-extraEnv: |
-  - name: KEYCLOAK_USER
-    value: admin
-  - name: KEYCLOAK_PASSWORD
-    value: $KEYCLOAK_PASSWORD
-  - name: JGROUPS_DISCOVERY_PROTOCOL
-    value: kubernetes.KUBE_PING
-  - name: KUBERNETES_NAMESPACE
-    valueFrom:
-     fieldRef:
-       apiVersion: v1
-       fieldPath: metadata.namespace
-  - name: KEYCLOAK_STATISTICS
-    value: "true"
-  - name: CACHE_OWNERS_COUNT
-    value: "2"
-  - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
-    value: "2"
-  - name: PROXY_ADDRESS_FORWARDING
-    value: "true"
-  - name: JAVA_OPTS
-    value: >-
-      -Dkeycloak.profile=preview -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0 -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true 
-ingress:
-  enabled: true
-  servicePort: http
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    ## Resolve HTTP 502 error using ingress-nginx:
-    ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
-    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
-  rules:
-    - host: "auth.lab.$DOMAIN"
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - auth.lab.$DOMAIN
-postgresql:
-  postgresqlPassword: $POSTGRESQL_PASSWORD
-EOF
-
-helm install keycloak codecentric/keycloak -f keycloak-values.yaml
-```
-
-You can now login to the **administration console** of **https://auth.lab.my-domain.net** and login using the credentials you have defined with `KEYCLOAK_USER` and `KEYCLOAK_PASSWORD`.
-
-1. Create a realm called "datalab" (or something else), go to **Realm settings**
-   1. On the tab General
-      1. _User Profile Enabled_: **On**
-   2. On the tab **login**
-      1. _User registration_: **On**
-      2. _Forgot password_: **On**
-      3. _Remember me_: **On**
-   3. On the tab **email,** we give an example with **** [AWS SES](https://aws.amazon.com/ses/), if you don't have a SMTP server at hand you can skip this by going to **Authentication** (on the left panel) -> Tab **Required Actions** -> Uncheck "set as default action" **Verify Email**. Be aware that with email verification disable, anyone will be able to sign up to your service.
-      1. _From_: **noreply@lab.my-domain.net**
-      2. _Host_: **email-smtp.us-east-2.amazonaws.com**
-      3. _Port_: **465**
-      4. _Authentication_: **enabled**
-      5. _Username_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-      6. _Password_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
-      7. When clicking "save" you'll be asked for a test email, you have to provide one that correspond **to a pre-existing user** or you will get a silent error and the credentials won't be saved.
-   4. On the tab Themes
-      1. _Login theme_: **sill-web** (you can also select the login theme on a per client basis)
-      2. _Email theme_: **sill-web**
-   5. On the tab **Localization**
-      1. _Internationalization_: **Enabled**
-      2. _Supported locales_: \<Select the languages you wish to support>
-2. Create a client called "sill"
-   1. _Root URL_: **https://sill-auth.my-domain.net/**
-   2. _Valid redirect URIs_: **https://sill.my-domain.net/\***
-   3. _Web origins_: **\***
-3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
-
-Now you want to define a list of email domain allowed to register to your service. &#x20;
-
-Go to **Realm Settings** (on the left panel) -> Tab **User Profile** (this tab shows up only if User Profile is enabled in the General tab and you can enable user profile only if you have started Keycloak with `-Dkeycloak.profile=preview)` -> **JSON Editor**.
-
-Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that. &#x20;
-
-<pre class="language-diff"><code class="lang-diff"> {
-   "attributes": [
-     {
-       "name": "email",
-       "displayName": "${email}",
-       "validations": {
-         "email": {},
-         "length": {
-           "max": 255
-         },
-+       "pattern": {
-<strong>+         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
-</strong>+      }
-       },
-       "permissions": {
-         "view": [],
-         "edit": []
-       },
-       "selector": {
-         "scopes": []
-       }
-     },
-<strong>+    {
-</strong>+      "selector": {
-+        "scopes": []
-+      },
-+      "permissions": {
-+        "view": [
-+          "user",
-+          "admin"
-+        ],
-+        "edit": [
-+          "user",
-+          "admin"
-+        ]
-+      },
-+      "name": "agencyName",
-+      "displayName": "${agencyName}",
-+      "validations": {},
-+      "required": {
-+        "roles": [
-+          "user"
-+        ],
-+        "scopes": []
-+      }
-+   }
-   ]
- }</code></pre>
-
-Now our Keycloak server is fully configured we just need to update our sill deployment to let it know about it. &#x20;
-
-Update the `sill-values.yaml` file  that you created previously, don't forget to replace all the occurence of **my-domain.net** by your actual domain. &#x20;
-
-Don't forget as well to remplace the terms of services of [etalab](https://sill.etalab.gouv.fr/tos\_fr.md) by your own terms of services. CORS should be enabled on those `.md` links (`Access-Control-Allow-Origin: *`).
-
-```diff
-+serviceAccount:
-+  clusterAdmin: true
- ingress:
-   enabled: true
-   annotations:
-     kubernetes.io/ingress.class: nginx
-   hosts:
-     - host: onyxia.my-domain.net
- ui:
-   image:
-     # Update on your own therm but update!
-     # https://hub.docker.com/r/inseefrlab/onyxia-api/tags
-     version: 0.56.6
-+  env:
-+    KEYCLOAK_REALM: datalab
-+    KEYCLOAK_URL: https://auth.lab.my-domain.net/auth
-+    TERMS_OF_SERVICES: |
-+      { "en": "https://www.sspcloud.fr/tos_en.md", "fr": "https://www.sspcloud.fr/tos_fr.md" }
- api:
-   image:
-     # Same here
-     # https://hub.docker.com/r/inseefrlab/onyxia-api/tags
-     version: multi-arch
-   env:
-     security.cors.allowed_origins: "http://localhost:3000"
-+    authentication.mode: openidconnect
-+    keycloak.realm: datalab
-+    keycloak.auth-server-url: https://auth.lab.my-domain.net/auth
-   regions:
-     [
-        {
-           "id":"demo",
-           "name":"Demo",
-           "description":"This is a demo region, feel free to try Onyxia !",
-           "services":{
-              "type":"KUBERNETES",
--             "singleNamespace": true,
-+             "singleNamespace": false,
-              "namespacePrefix":"user-",
-              "usernamePrefix":"oidc-",
-              "groupNamespacePrefix":"projet-",
-              "groupPrefix":"oidc-",
-              "authenticationMode":"admin",
-              "expose":{
-                 "domain":"lab.my-domain.net"
-              },
-              "monitoring":{
-                 "URLPattern":"todo"
-              },
-              "cloudshell":{
-                 "catalogId":"inseefrlab-helm-charts-datascience",
-                 "packageName":"cloudshell"
-              },
-              "initScript":"https://inseefrlab.github.io/onyxia/onyxia-init.sh"
-           },
-           "data":{
-              "S3":{
-                 "URL":"todo",
-                 "monitoring":{
-                    "URLPattern":"todo"
-                 }
-              }
-           },
-           "auth":{
-              "type":"openidconnect"
-           },
-           "location":{
-              "lat":48.8164,
-              "long":2.3174,
-              "name":"Montrouge (France)"
-           }
-        }
-     ]
-```
-
-Now that you have updated `onyxia-values.yaml` restart onyxia-web with the new configuration.
-
-```bash
-helm upgrade onyxia inseefrlab/onyxia -f onyxia-values.yaml
-```
-
-Now your users should be able to create account, log-in, and start services on their own Kubernetes namespace.
+###
 

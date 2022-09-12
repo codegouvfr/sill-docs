@@ -78,7 +78,7 @@ In order to contribute you have to be familiar with [Helm](https://helm.sh/) and
 
 In Onyxia we use the `values.shema.json` be  to know what options should be displayed to the user at [the service configuration step](https://user-images.githubusercontent.com/6702424/177571819-f2e1b4ef-ecd1-479b-a5a1-658d87d7c7c0.png) and what default value Onyxia should inject. &#x20;
 
-![https://helm.sh/docs/topics/charts/#the-chart-file-structure](<../.gitbook/assets/image (8).png>)
+![https://helm.sh/docs/topics/charts/#the-chart-file-structure](<../.gitbook/assets/image (8) (1).png>)
 
 Let's consider a sample of the `values.scema.json` of the InseeFrLab/helm-charts-datascience's Jupyter chart: &#x20;
 
