@@ -1,7 +1,7 @@
 # Table of contents
 
 * [🎯 Hub](README.md)
-* [🏁 Deploying](<README (1).md>)
+* [🏁 Deploying the WebApp](<README (1).md>)
 * [👨💻 Contributing](contributing/README.md)
   * [🔬 Help maintain the catalog of service](contributing/help-maintain-the-catalog-of-service.md)
   * [🐲 sill-web](contributing/sill-web/README.md)
