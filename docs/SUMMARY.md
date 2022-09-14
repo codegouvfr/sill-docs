@@ -1,6 +1,6 @@
 # Table of contents
 
-* [🎯 Project overview](README.md)
+* [🎯 Hub](README.md)
 * [🏁 Deploying](<README (1).md>)
 * [👨💻 Contributing](contributing/README.md)
   * [🔬 Help maintain the catalog of service](contributing/help-maintain-the-catalog-of-service.md)
