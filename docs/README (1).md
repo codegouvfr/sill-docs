@@ -2,8 +2,6 @@
 
 This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
-
 ### The Data Git repository
 
 #### Context
@@ -107,14 +105,10 @@ Once you have the address, create the following DNS records:
 ```dns-zone-file
 sill.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
 sill-auth.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
-sill-demo.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
-*.sill-tmp.my-domain.net  CNAME xxx.elb.eu-west-1.amazonaws.com. 
 ```
 
 {% hint style="info" %}
 Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**. &#x20;
-
-If you do not plan to deploy the platform that enables to test the software in the browser you won't need the sill-demo and \*.sill-tmp record. &#x20;
 {% endhint %}
 
 
@@ -141,7 +135,7 @@ brew install certbot #On Mac, lookup how to install certbot for your OS
 sudo certbot certonly --manual --preferred-challenges dns
 
 # When asked for the domains you wish to optains a certificate for enter:
-#   sill.sill.ovh sill-auth.sill.ovh sill-demo.sill.ovh *.sill-tmp.sill.ovh
+#   sill.my-domain.net sill-auth.my-domain.net
 ```
 
 {% hint style="info" %}
@@ -201,8 +195,6 @@ Get [your internet box routable IP](http://monip.org/) and create the following 
 ```dns-zone-file
 sill.my-domain.net A <YOUR IP>
 sill-auth.my-domain.net A <YOUR IP>
-sill-demo.my-domain.net A <YOUR IP>
-*.sill-tmp.my-domain.net A <YOUR IP>
 ```
 
 {% hint style="success" %}
@@ -215,15 +207,11 @@ sill.my-domain.net CNAME jhon-doe-home.ddns.net.
 {% endhint %}
 
 {% hint style="info" %}
-Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**. &#x20;
-
-If you do not plan to deploy the platform that enables to test the software in the browser you won't need the sill-demo and \*.sill-tmp record. &#x20;
+Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth**. &#x20;
 {% endhint %}
 
 * **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).&#x20;
 * **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
-* **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
-* **https://\*.sill-tmp.my-domain.net** will be the temporary url created by the Onyxia instance for testing the software. &#x20;
 
 ### SSL
 
@@ -236,7 +224,7 @@ brew install certbot #On Mac, lookup how to install certbot for your OS
 sudo certbot certonly --manual --preferred-challenges dns
 
 # When asked for the domains you wish to optains a certificate for enter:
-#   #   sill.sill.ovh sill-auth.sill.ovh sill-demo.sill.ovh *.sill-tmp.sill.ov
+#   #   sill.my-domain.net sill-auth.my-domain.net
 ```
 
 {% hint style="info" %}
@@ -280,7 +268,7 @@ helm install ingress-nginx ingress-nginx \
 At this point we assume that:&#x20;
 
 * You have a Kubernetes cluster and `kubectl` configured
-* **sill.my-domain.net** and **\*.sill-tmp.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
+* **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
 * You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**.&#x20;
 
 {% hint style="success" %}
@@ -499,7 +487,7 @@ Now our Keycloak server is configured.
 
 #### Enabeling AgentConnect
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
 

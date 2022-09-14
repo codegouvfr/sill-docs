@@ -6,6 +6,8 @@ description: >-
 
 # 🎯 Hub
 
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>Screenshot of the mail page of the WebApp</p></figcaption></figure>
+
 ### Source code
 
 * The source Markdown for this documentation website. You can also request an access to the [the GitBook](https://app.gitbook.com/o/w6D6SnLwCXQaMMSzcTvp/s/WfLZKgyNVcGm8CUpiWb0/)
