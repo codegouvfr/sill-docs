@@ -1,4 +1,4 @@
-# 🏁 Deploying
+# 🏁 Deploying the WebApp
 
 This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
 
@@ -615,4 +615,5 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 ### Onyxia instance for testing the softwares
 
-TODO
+You will find a guide here on how to deploy an Onyxia instance. &#x20;
+
