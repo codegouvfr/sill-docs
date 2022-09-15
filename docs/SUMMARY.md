@@ -2,6 +2,7 @@
 
 * [🎯 Index](README.md)
 * [🏁 Deploying the WebApp](<README (1).md>)
+* [👩💻 Setting up a development environment](setting-up-a-development-environment.md)
 * [👨💻 Contributing](contributing/README.md)
   * [🔬 Help maintain the catalog of service](contributing/help-maintain-the-catalog-of-service.md)
   * [🐲 sill-web](contributing/sill-web/README.md)
