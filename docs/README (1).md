@@ -66,7 +66,7 @@ You can stop after the [configure kubectl section](https://learn.hashicorp.com/t
 
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes" %}
 
-#### Ingress controller
+### Ingress controller
 
 Deploy an ingress controller on your cluster:
 
@@ -82,7 +82,7 @@ For Azure use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/aws/deploy.yaml
 ```
 
-#### DNS
+### DNS
 
 Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
 
@@ -120,7 +120,7 @@ If the address you got was ans IPv6 (`y:y:y:y:y:y:y:y`), create a `AAAA` record.
 * **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
 * **https://\*.sill-tmp.my-domain.net** will be the temporary test urls created by [Onyxia](https://www.onyxia.sh/).
 
-#### SSL
+### SSL
 
 In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool then get our ingress controller to use it.
 
@@ -166,16 +166,16 @@ This command will open your configured text editor, go to line `56` and add:
         - --default-ssl-certificate=ingress-nginx/sill-tls
 ```
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 {% endtab %}
 
 {% tab title="Test on your machine" %}
-
-
-````
 If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
 
-![Enable Kubernetes in Docker desktop](<.gitbook/assets/image (13).png>)
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+````
+
 
 {% raw %}
 {% hint style="info" %}
