@@ -1,31 +1,31 @@
 # 🏁 Deploying the WebApp
 
-This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr). &#x20;
+This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr).
 
 ### The Data Git repository
 
 #### Context
 
-The data are stored in [a separate Git repo](https://github.com/etalab/sill-data-template) that serves as source of truth for the SILL Web Application, a database of sort. &#x20;
+The data are stored in [a separate Git repo](https://github.com/etalab/sill-data-template) that serves as source of truth for the SILL Web Application, a database of sort.
 
-This repo hold JSON files that describes what [software](https://github.com/etalab/sill-data-template/blob/main/software.json) and [services](https://github.com/etalab/sill-data-template/blob/main/service.json) are in the SILL. &#x20;
+This repo hold JSON files that describes what [software](https://github.com/etalab/sill-data-template/blob/main/software.json) and [services](https://github.com/etalab/sill-data-template/blob/main/service.json) are in the SILL.
 
-There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way is true as well. &#x20;
+There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way is true as well.
 
-On the main branch of the Data repo are stored only the the informations about the software that are directly related with the SILL and can't be found elswhere. &#x20;
+On the main branch of the Data repo are stored only the the informations about the software that are directly related with the SILL and can't be found elswhere.
 
-There is [an other branch, the `build` banch](https://github.com/etalab/sill-data-template/tree/build) that holds all the informations of the main branch plus informations that have been scrapped from multiple sources like [Wikidata.org](https://www.wikidata.org/wiki/Wikidata:Main\_Page) and [https://comptoir-du-libre.org](https://comptoir-du-libre.org/en/).&#x20;
+There is [an other branch, the `build` banch](https://github.com/etalab/sill-data-template/tree/build) that holds all the informations of the main branch plus informations that have been scrapped from multiple sources like [Wikidata.org](https://www.wikidata.org/wiki/Wikidata:Main\_Page) and [https://comptoir-du-libre.org](https://comptoir-du-libre.org/en/).
 
-The scrapping and update of the build branch is performed [once every four hour ](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L7)and [whenever there is a commit on the main branch](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L2-L5). &#x20;
+The scrapping and update of the build branch is performed [once every four hour ](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L7)and [whenever there is a commit on the main branch](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L2-L5).
 
-The data repo can be private or public and does not need to be hosted on GitHub. &#x20;
+The data repo can be private or public and does not need to be hosted on GitHub.
 
 #### Instantiating your Data Git Repository
 
-First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using). &#x20;
+First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using).
 
 * Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
-* Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`. &#x20;
+* Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
 
 Now you want to start from [etalab/sill-data-template](https://github.com/etalab/sill-data-template)
 
@@ -38,9 +38,9 @@ Now you want to start from [etalab/sill-data-template](https://github.com/etalab
 Congratulation! 🥳 You now have a self managed repo. If you add a software to software.json [compiledData.json](https://github.com/etalab/sill-data-template/blob/build/compiledData.json) and [compiledData\_withoutReferents.json](https://github.com/etalab/sill-data-template/blob/build/compiledData\_withoutReferents.json) are going to be automatically updated.
 
 {% hint style="warning" %}
-Note that the CI is always using [the latest version of the scrapping script](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L13). You probably want to keep in sync with the version of etalab/sill-api you have in prod and (we depoly it later in this guide). &#x20;
+Note that the CI is always using [the latest version of the scrapping script](https://github.com/etalab/sill-data-template/blob/b2a763f73fb1e38833a709e7403f0c359ec711a9/.github/workflows/ci.yaml#L13). You probably want to keep in sync with the version of etalab/sill-api you have in prod and (we depoly it later in this guide).
 
-Example:&#x20;
+Example:
 
 ```diff
 -npx -y -p sill-api@latest build-data
@@ -50,15 +50,15 @@ Example:&#x20;
 
 ### Provison a Kubernetes cluster
 
-First you'll need a Kubernetes cluster.  If you have one already you can skip this section.
-
 {% tabs %}
 {% tab title="Provisioning a cluster on AWS, GCP or Azure" %}
-[Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).&#x20;
+[Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).
 
-Pick one of the three and follow the guide.&#x20;
+Pick one of the three and follow the guide.
 
-You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl). &#x20;
+You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
+
+
 
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/eks" %}
 
@@ -66,12 +66,12 @@ You can stop after the [configure kubectl section](https://learn.hashicorp.com/t
 
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes" %}
 
-### Ingress controller &#x20;
+#### Ingress controller
 
 Deploy an ingress controller on your cluster:
 
 {% hint style="warning" %}
-The following command is [for AWS](https://kubernetes.github.io/ingress-nginx/deploy/#aws). &#x20;
+The following command is [for AWS](https://kubernetes.github.io/ingress-nginx/deploy/#aws).
 
 For GCP use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#gce-gke).
 
@@ -82,23 +82,23 @@ For Azure use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/aws/deploy.yaml
 ```
 
-### DNS
+#### DNS
 
-Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own. &#x20;
+Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
 
 (In our case my-domain.net is etalab.gouv.fr)
 
-Now you need to get the external address of your cluster, run the command&#x20;
+Now you need to get the external address of your cluster, run the command
 
 ```bash
 kubectl get services -n ingress-nginx
 ```
 
-and write down the `External IP` assigned to the `LoadBalancer`.&#x20;
+and write down the `External IP` assigned to the `LoadBalancer`.
 
-Depending on the cloud provider you are using it can be an IPv4, an IPv6 or a domain. On AWS for example, it will be a domain like **xxx.elb.eu-west-1.amazonaws.com**. &#x20;
+Depending on the cloud provider you are using it can be an IPv4, an IPv6 or a domain. On AWS for example, it will be a domain like **xxx.elb.eu-west-1.amazonaws.com**.
 
-If you see `<pending>`, wait a few seconds and try again. &#x20;
+If you see `<pending>`, wait a few seconds and try again.
 
 Once you have the address, create the following DNS records:
 
@@ -108,23 +108,21 @@ sill-auth.my-domain.net CNAME xxx.elb.eu-west-1.amazonaws.com.
 ```
 
 {% hint style="info" %}
-Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**. &#x20;
+Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth** **sill-demo**, **sill-tmp**.
 {% endhint %}
-
-
 
 If the address you got was an IPv4 (`x.x.x.x`), create a `A` record instead of a CNAME.
 
 If the address you got was ans IPv6 (`y:y:y:y:y:y:y:y`), create a `AAAA` record.
 
-* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).&#x20;
+* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).
 * **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
 * **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
-* **https://\*.sill-tmp.my-domain.net** will be the temporary test urls created by [Onyxia](https://www.onyxia.sh/). &#x20;
+* **https://\*.sill-tmp.my-domain.net** will be the temporary test urls created by [Onyxia](https://www.onyxia.sh/).
 
-### SSL
+#### SSL
 
-In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool then get our ingress controller to use it. &#x20;
+In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool then get our ingress controller to use it.
 
 If you are already familiar with `certbot` you're probably used to run it on a remote host via SSH. In this case you are expected to run it on your own machine, we'll use the DNS chalenge instead of the HTTP chalenge.
 
@@ -139,14 +137,14 @@ sudo certbot certonly --manual --preferred-challenges dns
 ```
 
 {% hint style="info" %}
-The obtained certificate needs to be renewed every three month. &#x20;
+The obtained certificate needs to be renewed every three month.
 
 To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 challange provider](https://cert-manager.io/docs/configuration/acme/dns01/) on your cluster. You may need to delegate your DNS Servers to one of the supported [DNS service provider](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
 
 If you are not planing to deploy an Onyxia instance you do not need a wildcard (\*) certificate and thus, in place of DNS01 you can configure [the HTTP01 Ingress solver](https://cert-manager.io/docs/configuration/acme/http01/#configuring-the-http01-ingress-solver) which is much easier to configure. You can follow [this tutorial](https://www.youtube.com/watch?v=hoLUigg4V18).
 {% endhint %}
 
-Now we want to create a Kubernetes secret containing our newly obtained certificate: &#x20;
+Now we want to create a Kubernetes secret containing our newly obtained certificate:
 
 ```bash
 DOMAIN=my-domain.net
@@ -156,26 +154,30 @@ sudo kubectl create secret tls sill-tls \
     --cert /etc/letsencrypt/live/sill.$DOMAIN/fullchain.pem
 ```
 
-Lastly, we want to tell our ingress controller to use this TLS certificate, to do so run: &#x20;
+Lastly, we want to tell our ingress controller to use this TLS certificate, to do so run:
 
 ```bash
 kubectl edit deployment ingress-nginx-controller -n ingress-nginx
 ```
 
-This command will open your configured text editor, go to line `56` and add: &#x20;
+This command will open your configured text editor, go to line `56` and add:
 
 ```yaml
         - --default-ssl-certificate=ingress-nginx/sill-tls
 ```
 
-![](<.gitbook/assets/image (11).png>)
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 {% endtab %}
 
 {% tab title="Test on your machine" %}
+
+
+````
 If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
 
 ![Enable Kubernetes in Docker desktop](<.gitbook/assets/image (13).png>)
 
+{% raw %}
 {% hint style="info" %}
 Docker desktop isn't available on Linux, you can use [Kind](https://kind.sigs.k8s.io/) instead.
 {% endhint %}
@@ -234,6 +236,7 @@ To avoid the burden of having to remember to re-run the `certbot` command period
 
 If you are not planing to deploy an Onyxia instance you do not need a wildcard (\*) certificate and thus, in place of DNS01 you can configure [the HTTP01 Ingress solver](https://cert-manager.io/docs/configuration/acme/http01/#configuring-the-http01-ingress-solver) which is much easier to configure. You can follow [this tutorial](https://www.youtube.com/watch?v=hoLUigg4V18).
 {% endhint %}
+{% endraw %}
 
 Now we want to create a Kubernetes secret containing our newly obtained certificate: &#x20;
 
@@ -262,28 +265,43 @@ helm install ingress-nginx ingress-nginx \
     --namespace ingress-nginx \
     -f ./ingress-nginx-values.yaml
 ```
+````
 {% endtab %}
 {% endtabs %}
 
-At this point we assume that:&#x20;
+First you'll need a Kubernetes cluster. If you have one already you can skip this section.
+
+[Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).
+
+Pick one of the three and follow the guide.
+
+You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
+
+{% embed url="https://learn.hashicorp.com/tutorials/terraform/eks" %}
+
+{% embed url="https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes" %}
+If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
+{% endembed %}
+
+At this point we assume that:
 
 * You have a Kubernetes cluster and `kubectl` configured
 * **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
-* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**.&#x20;
+* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**.
 
 {% hint style="success" %}
-Through out this guide we make as if everything was instantaneous. In reality if you are testing on a small cluster you will need to wait several minutes after hitting `helm install` for the services to be ready. &#x20;
+Through out this guide we make as if everything was instantaneous. In reality if you are testing on a small cluster you will need to wait several minutes after hitting `helm install` for the services to be ready.
 
-Use `kubectl get pods` to see if your pods are up and ready.&#x20;
+Use `kubectl get pods` to see if your pods are up and ready.
 
-![](<.gitbook/assets/image (2).png>)
+<img src=".gitbook/assets/image (2).png" alt="" data-size="original">
 {% endhint %}
 
 <details>
 
 <summary>(Optional) Make sure that your cluster is ready for the SILL</summary>
 
-To make sure that your Kubernetes cluster is correctly configured let's deploy a test web app on it before deploying the SILL.  &#x20;
+To make sure that your Kubernetes cluster is correctly configured let's deploy a test web app on it before deploying the SILL.
 
 <img src=".gitbook/assets/image (19).png" alt="The hello world SPA deployed" data-size="original">
 
@@ -311,9 +329,9 @@ helm uninstall test-spa
 
 ### Installing Keycloak
 
-Let's setup Keycloak to enable users to create account and login to our SILL. &#x20;
+Let's setup Keycloak to enable users to create account and login to our SILL.
 
-For deploying our Keycloak we use [codecentric's helm chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak). &#x20;
+For deploying our Keycloak we use [codecentric's helm chart](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak).
 
 ```bash
 helm repo add codecentric https://codecentric.github.io/helm-charts
@@ -408,7 +426,7 @@ You can now login to the **administration console** of **https://sill-auth.my-do
       1. _User registration_: **On**
       2. _Forgot password_: **On**
       3. _Remember me_: **On**
-   3. On the tab **email,** we give an example with **** [AWS SES](https://aws.amazon.com/ses/), if you don't have a SMTP server at hand you can skip this by going to **Authentication** (on the left panel) -> Tab **Required Actions** -> Uncheck "set as default action" **Verify Email**. Be aware that with email verification disable, anyone will be able to sign up to your service.
+   3. On the tab **email,** we give an example with \*\*\*\* [AWS SES](https://aws.amazon.com/ses/), if you don't have a SMTP server at hand you can skip this by going to **Authentication** (on the left panel) -> Tab **Required Actions** -> Uncheck "set as default action" **Verify Email**. Be aware that with email verification disable, anyone will be able to sign up to your service.
       1. _From_: **noreply@lab.my-domain.net**
       2. _Host_: **email-smtp.us-east-2.amazonaws.com**
       3. _Port_: **465**
@@ -428,11 +446,11 @@ You can now login to the **administration console** of **https://sill-auth.my-do
    3. _Web origins_: **\***
 3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
 
-Now you want to define a list of email domain allowed to register to your service. &#x20;
+Now you want to define a list of email domain allowed to register to your service.
 
 Go to **Realm Settings** (on the left panel) -> Tab **User Profile** (this tab shows up only if User Profile is enabled in the General tab and you can enable user profile only if you have started Keycloak with `-Dkeycloak.profile=preview)` -> **JSON Editor**.
 
-Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that. &#x20;
+Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that.
 
 <pre class="language-diff"><code class="lang-diff"> {
    "attributes": [
@@ -491,9 +509,9 @@ Now our Keycloak server is configured.
 
 To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
 
-Follow the instructions in the readme of [InseeFr/Keycloak-FranceConnect](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect). &#x20;
+Follow the instructions in the readme of [InseeFr/Keycloak-FranceConnect](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect).
 
-Theses are the information that you'll need to give to the France Connect team to receive your credentials:&#x20;
+Theses are the information that you'll need to give to the France Connect team to receive your credentials:
 
 ```
 Nom du fournisseur de service: "Socle interministériel de logiciels libres" ( ou SILL pour les intimes )
@@ -507,7 +525,7 @@ Algorithme de la signature des userinfos: ES256
 Algorithme de la signature de l'id token: ES256
 ```
 
-You'll also need to create a mapper for organizational\_unit -> agencyName. &#x20;
+You'll also need to create a mapper for organizational\_unit -> agencyName.
 
 Go to Identity Providers -> Agent Connect -> Mappers -> create
 
@@ -515,10 +533,9 @@ Go to Identity Providers -> Agent Connect -> Mappers -> create
 
 ### Instantiating the web app
 
-&#x20;helm repo add etalab https://etalab.github.io/helm-charts
+helm repo add etalab https://etalab.github.io/helm-charts
 
 ```bash
-
 DOMAIN=my-domain.net
 SSH_PRIVATE_KEY_NAME=id_ed25521 # For example, generated earlyer
 SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
@@ -599,13 +616,13 @@ EOF
 helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 ```
 
-&#x20;You can now access `https://sill.my-domain.net`. Congratulations! 🥳
+You can now access `https://sill.my-domain.net`. Congratulations! 🥳
 
 ### Onyxia instance for testing the softwares
 
-You will find a guide [here](https://docs.onyxia.sh/) on how to deploy an Onyxia instance. &#x20;
+You will find a guide [here](https://docs.onyxia.sh/) on how to deploy an Onyxia instance.
 
-This is the value to instantiate Onyxia agaist the catalog [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill): &#x20;
+This is the value to instantiate Onyxia agaist the catalog [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill):
 
 ```yaml
 onyxia:
@@ -734,4 +751,3 @@ onyxia:
         }
       ]
 ```
-
