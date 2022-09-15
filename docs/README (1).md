@@ -166,33 +166,31 @@ This command will open your configured text editor, go to line `56` and add:
         - --default-ssl-certificate=ingress-nginx/sill-tls
 ```
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 {% endtab %}
 
 {% tab title="Test on your machine" %}
 If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
-````
-
-
-{% raw %}
 {% hint style="info" %}
 Docker desktop isn't available on Linux, you can use [Kind](https://kind.sigs.k8s.io/) instead.
 {% endhint %}
 
 ### Port Forwarding
 
-You'll need to [forward the TCP ports 80 and 443 to your local machine](https://user-images.githubusercontent.com/6702424/174459930-23fb577c-11a2-49ef-a082-873f4139aca1.png).  It's done from the administration panel of your domestic internet Box. If you're on a corporate network, no luck for you I'm afraid.
+You'll need to [forward the TCP ports 80 and 443 to your local machine](https://user-images.githubusercontent.com/6702424/174459930-23fb577c-11a2-49ef-a082-873f4139aca1.png). It's done from the administration panel of your domestic internet Box. If you're on a corporate network, no luck for you I'm afraid.
 
 ### DNS
 
-Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own. &#x20;
+
+
+Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
 
 (In our case my-domain.net is etalab.gouv.fr)
 
-Get [your internet box routable IP](http://monip.org/) and create the following DNS records: &#x20;
+Get [your internet box routable IP](http://monip.org/) and create the following DNS records:
 
 ```dns-zone-file
 sill.my-domain.net A <YOUR IP>
@@ -200,7 +198,7 @@ sill-auth.my-domain.net A <YOUR IP>
 ```
 
 {% hint style="success" %}
-If you have DDNS domain you can create `CNAMEs` instead example: &#x20;
+If you have DDNS domain you can create `CNAMEs` instead example:
 
 ```
 sill.my-domain.net CNAME jhon-doe-home.ddns.net.
@@ -208,16 +206,18 @@ sill.my-domain.net CNAME jhon-doe-home.ddns.net.
 ```
 {% endhint %}
 
+
+
 {% hint style="info" %}
-Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth**. &#x20;
+Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth**.
 {% endhint %}
 
-* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).&#x20;
+* **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).
 * **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
 
 ### SSL
 
-In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool. &#x20;
+In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool.
 
 ```bash
 brew install certbot #On Mac, lookup how to install certbot for your OS
@@ -226,19 +226,18 @@ brew install certbot #On Mac, lookup how to install certbot for your OS
 sudo certbot certonly --manual --preferred-challenges dns
 
 # When asked for the domains you wish to optains a certificate for enter:
-#   #   sill.my-domain.net sill-auth.my-domain.net
+#      sill.my-domain.net sill-auth.my-domain.net
 ```
 
 {% hint style="info" %}
-The obtained certificate needs to be renewed every three month. &#x20;
+The obtained certificate needs to be renewed every three month.
 
 To avoid the burden of having to remember to re-run the `certbot` command periodically you can setup [cert-manager](https://cert-manager.io/) and configure a [DNS01 challange provider](https://cert-manager.io/docs/configuration/acme/dns01/) on your cluster. You may need to delegate your DNS Servers to one of the supported [DNS service provider](https://cert-manager.io/docs/configuration/acme/dns01/#supported-dns01-providers).
 
 If you are not planing to deploy an Onyxia instance you do not need a wildcard (\*) certificate and thus, in place of DNS01 you can configure [the HTTP01 Ingress solver](https://cert-manager.io/docs/configuration/acme/http01/#configuring-the-http01-ingress-solver) which is much easier to configure. You can follow [this tutorial](https://www.youtube.com/watch?v=hoLUigg4V18).
 {% endhint %}
-{% endraw %}
 
-Now we want to create a Kubernetes secret containing our newly obtained certificate: &#x20;
+Now we want to create a Kubernetes secret containing our newly obtained certificate:
 
 ```bash
 kubectl create namespace ingress-nginx
@@ -249,7 +248,7 @@ sudo kubectl create secret tls sill-tls \
     --cert /etc/letsencrypt/live/sill.$DOMAIN/fullchain.pem
 ```
 
-### Ingress controller
+#### Ingress controller
 
 We'll install [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) in our cluster ~~but any other ingress controller will do~~.
 
@@ -265,23 +264,8 @@ helm install ingress-nginx ingress-nginx \
     --namespace ingress-nginx \
     -f ./ingress-nginx-values.yaml
 ```
-````
 {% endtab %}
 {% endtabs %}
-
-First you'll need a Kubernetes cluster. If you have one already you can skip this section.
-
-[Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).
-
-Pick one of the three and follow the guide.
-
-You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
-
-{% embed url="https://learn.hashicorp.com/tutorials/terraform/eks" %}
-
-{% embed url="https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes" %}
-If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
-{% endembed %}
 
 At this point we assume that:
 

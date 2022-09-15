@@ -4,9 +4,9 @@ description: >-
   software for the French public sector (SILL).
 ---
 
-# 🎯 Hub
+# 🎯 Index
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>Screenshot of the mail page of the WebApp</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption><p>Screenshot of the mail page of the WebApp</p></figcaption></figure>
 
 ### Source code
 
