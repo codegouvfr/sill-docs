@@ -66,7 +66,43 @@ Update [the package.json version number](https://github.com/etalab/sill-web/blob
 
 Same, update [the package.json version number](https://github.com/etalab/sill-api/blob/77703b6ec2874792ad7d858f29b53109ee590de1/package.json#L3) and push. Don't forget however [to wait](https://github.com/etalab/sill-api/actions) for the latest version [to be published on NPM](https://www.npmjs.com/package/sill-api). And update the version [sill-web's package.json](https://github.com/etalab/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L48). (You'll need to update the package.lock as well by running `yarn` again, you can just run `yarn add sill-api`, it's faster).
 
-####
+
+
+### Starting with Docker
+
+This is how to build and start the Docker image of [etalab/sill-api](https://github.com/etalab/sill-api), you can adapt theses commands with [etalab/sill-web](https://github.com/etalab/sill-web). &#x20;
+
+```bash
+# In your ~/.bash_profile
+# export KEYCLOAK_ETALAB_ADMIN_PASSWORD=xxx
+# export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25519" (for example)
+# export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nxxx\nxxx\nxxx\n-----END OPENSSH PRIVATE KEY-----\n"
+
+CONFIGURATION=$(cat << EOF
+{
+  "keycloakParams": {
+    "url": "https://sill-auth.etalab.gouv.fr/auth",
+    "realm": "etalab",
+    "clientId": "sill",
+    "termsOfServices": "https://sill.etalab.gouv.fr/tos_fr.md",
+    "adminPassword": "$KEYCLOAK_ETALAB_ADMIN_PASSWORD"
+  },
+    "jwtClaims": {
+    "id": "sub",
+    "email": "email",
+    "agencyName": "agency_name",
+    "locale": "locale"
+  },
+  "dataRepoSshUrl": "git@github.com:etalab/sill-data-test.git",
+  "sshPrivateKeyForGitName": "id_ed25519",
+  "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY_FOR_GIT"
+}
+EOF
+)
+
+docker build -t etalab/sill-api:main .
+docker run -it -p 8080:8080 --env CONFIGURATION="$CONFIGURATION" etalab/sill-api:mainsh
+```
 
 ## License
 
