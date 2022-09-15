@@ -603,5 +603,135 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 ### Onyxia instance for testing the softwares
 
-You will find a guide here on how to deploy an Onyxia instance. &#x20;
+You will find a guide [here](https://docs.onyxia.sh/) on how to deploy an Onyxia instance. &#x20;
+
+This is the value to instantiate Onyxia agaist the catalog [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill): &#x20;
+
+```yaml
+onyxia:
+  serviceAccount:
+    create: true
+    clusterAdmin: false
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: sill-demo.etalab.gouv.fr
+    tls:
+      - hosts:
+          - sill-demo.etalab.gouv.fr
+        secretName: sill-tls 
+  ui:
+    replicaCount: 2
+    image:
+      name: inseefrlab/onyxia-web
+      version: 0.59.0
+    nodeSelector:
+      infra: "true"
+    tolerations:
+      - key: "infra"
+        operator: "Exists"
+    env:
+      KEYCLOAK_URL: https://sill-auth.etalab.gouv.fr/auth
+      KEYCLOAK_REALM: etalab
+      KEYCLOAK_CLIENT_ID: onyxia-sill
+      HEADER_ORGANIZATION: Etalab
+      JWT_USERNAME_CLAIM: sub
+      #TERMS_OF_SERVICES: https://etalab.github.com/helm-charts-sill/tos-fr.md
+      HIGHLIGHTED_PACKAGES: |
+        [ "flarum", "nocodb", "ubuntu", "jupyter", "elastic" ]
+      HEADER_USECASE_DESCRIPTION: "Embarquement immédiat"
+      HEADER_LINKS: |
+        [
+          { 
+            "label": "code.gouv.fr", 
+            "iconId": "assuredWorkload", 
+            "url": "https://code.gouv.fr" 
+          }, 
+          { 
+            "label": "Le SILL", 
+            "iconId": "grading", 
+            "url": "https://sill.etalab.gouv.fr" 
+          }
+        ]
+      DISABLE_HOME_PAGE: true
+      THEME_ID: france
+      DESCRIPTION: |
+        Une plateforme pour essayer les logiciels du socle interministériel du numérique en quelques clics sans quitter le navigateur.
+      HEADER_HIDE_ONYXIA: true
+
+  api:
+    replicaCount: 3
+    image:
+      name: inseefrlab/onyxia-api
+      pullPolicy: "Always"
+    nodeSelector:
+      infra: "true"
+    tolerations:
+      - key: "infra"
+        operator: "Exists"
+    env:
+      security.cors.allowed_origins: "*"
+      keycloak.resource: onyxia
+      keycloak.realm: etalab
+      keycloak.auth-server-url: https://sill-auth.etalab.gouv.fr/auth
+      keycloak.ssl-required: external
+      keycloak.public-client: "true"
+      keycloak.enable-basic-auth: "true"
+      keycloak.bearer-only: "true"
+      authentication.mode: "openidconnect"
+      springdoc.swagger-ui.oauth.clientId: onyxia
+      catalog.refresh.ms: "300000"
+    catalogs: 
+      [
+        {
+          "id": "helm-charts-sill",
+          "name": "Logiciels du SILL",
+          "description": "Un repo avec les logiciels du sill qu'il est possible de tester.",
+          "maintainer": "joseph.garrone@data.gouv.fr",
+          "location": "https://etalab.github.io/helm-charts-sill",
+          "status": "PROD",
+          "type": "helm"
+        }
+      ]
+    regions: 
+      [
+        {
+          "id": "paris",
+          "name": "Kubernetes DG Insee",
+          "description": "Region principale. Plateforme hébergée sur les serveurs de la direction générale de l'INSEE à Montrouge.",
+          "services": {
+            "type": "KUBERNETES",
+            "singleNamespace": true,
+            "namespacePrefix": "user-",
+            "usernamePrefix": "oidc-",
+            "groupNamespacePrefix": "projet-",
+            "groupPrefix": "oidc-",
+            "authenticationMode": "admin",
+            "expose": { "domain": "kub.sspcloud.fr" },
+            "monitoring": { "URLPattern": "https://grafana.lab.sspcloud.fr/d/kYYgRWBMz/users-services?orgId=1&refresh=5s&var-namespace=$NAMESPACE&var-instance=$INSTANCE" },
+            "cloudshell": {
+              "catalogId": "inseefrlab-helm-charts-datascience",
+              "packageName": "cloudshell"
+            },
+            "quotas": {
+                "enabled": true,
+                "allowUserModification": true,
+                "default": {
+                  "requests.storage": "1Ti",
+                  "count/pods": "100"
+                }
+              },
+              "defaultConfiguration": {
+                "ipprotection": true,
+                "networkPolicy": true
+              },
+            "initScript": "https://InseeFrLab.github.io/onyxia/onyxia-init.sh"
+          },
+          "auth": { "type": "openidconnect" },
+          "location": { "lat": 48.8164, "long": 2.3174, "name": "Montrouge (France)" }
+        }
+      ]
+```
 
