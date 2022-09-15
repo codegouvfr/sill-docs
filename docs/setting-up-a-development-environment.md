@@ -7,7 +7,7 @@ Once you have it you should edit the .env.local.sh of both etalab/sill-web and e
 * etalab/sill-web: [.env.local.sh](https://github.com/etalab/sill-web/blob/main/.env.local.sh) and [here is the shema](https://github.com/etalab/sill-web/blob/5dfd9535e777400e20dcd45dd3baf6173273e620/src/configuration.ts#L14-L65).
 * etalab/sill-api: [.env.local.sh](https://github.com/etalab/sill-api/blob/main/.env.local.sh) and [here is the shema](https://github.com/etalab/sill-api/blob/main/src/server/configuration.ts).
 
-If you don't have a Keycloak server you can disable authentication by removing the  keycloakParams from [etalab/sill-api/.env.local.sh](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L5-L11) if you have one you must have [an environement variable](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L10) that holds the password of the "admin" user..
+If you don't have a Keycloak server you can disable authentication by removing the  keycloakParams from [etalab/sill-api/.env.local.sh](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L5-L11) if you have one you must have [an environement variable](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L10) that holds the password of the "admin" user.
 
 Makes sur to put the name of your SSH key and the private key (generated when you created the sill-data repo) in your `~/.bash_profile` example:
 
