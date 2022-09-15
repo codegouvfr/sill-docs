@@ -117,7 +117,3 @@ EOF
 docker build -t etalab/sill-api:main .
 docker run -it -p 8080:8080 --env CONFIGURATION="$CONFIGURATION" etalab/sill-api:mainsh
 ```
-
-## License
-
-MIT, Direction interministérielle du numérique.
