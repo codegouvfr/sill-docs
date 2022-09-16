@@ -6,7 +6,7 @@ This is a step by step guide that will assist you in deploying your own instance
 
 #### Context
 
-The data are stored in [a separate Git repo](https://github.com/etalab/sill-data-template) that serves as source of truth for the SILL Web Application, a database of sort.
+The data are stored in [a separate Git repo](https://github.com/etalab/sill-data-template) that serves as source of truth for the SILL Web Application, this repo is used as a database of sort.
 
 This repo hold JSON files that describes what [software](https://github.com/etalab/sill-data-template/blob/main/software.json) and [services](https://github.com/etalab/sill-data-template/blob/main/service.json) are in the SILL.
 
