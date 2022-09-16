@@ -602,7 +602,7 @@ helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
 
 You can now access `https://sill.my-domain.net`. Congratulations! 🥳
 
-### Onyxia instance for testing the softwares
+### Onyxia instance for testing the softwares (like [https://sill-demo.etalab.gouv.fr/](https://sill-demo.etalab.gouv.fr/))
 
 You will find a guide [here](https://docs.onyxia.sh/) on how to deploy an Onyxia instance.
 
