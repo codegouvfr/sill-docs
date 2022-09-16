@@ -48,6 +48,22 @@ Example:
 ```
 {% endhint %}
 
+#### Enabling web hooks (optional)
+
+{% hint style="info" %}
+It is best to skip this first and come back to this when everything else is working properly since it's only a performance optimisation.&#x20;
+{% endhint %}
+
+By default the web app checks periodically checks the data repo for update. &#x20;
+
+If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update. &#x20;
+
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
+Type some random string as secret. You then need to provide it to sill-api so it know it can trust the ping to be genuin. &#x20;
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
 ### Provison a Kubernetes cluster
 
 {% tabs %}
@@ -166,13 +182,13 @@ This command will open your configured text editor, go to line `56` and add:
         - --default-ssl-certificate=ingress-nginx/sill-tls
 ```
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 {% endtab %}
 
 {% tab title="Test on your machine" %}
 If you are on a Mac or Window computer you can install [Docker desktop](https://www.docker.com/products/docker-desktop/) then enable Kubernetes.
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
 Docker desktop isn't available on Linux, you can use [Kind](https://kind.sigs.k8s.io/) instead.
@@ -278,7 +294,7 @@ Through out this guide we make as if everything was instantaneous. In reality if
 
 Use `kubectl get pods` to see if your pods are up and ready.
 
-<img src=".gitbook/assets/image (2).png" alt="" data-size="original">
+<img src=".gitbook/assets/image (2) (1).png" alt="" data-size="original">
 {% endhint %}
 
 <details>
