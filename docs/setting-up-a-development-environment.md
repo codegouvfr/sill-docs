@@ -1,13 +1,13 @@
 # 👩💻 Setting up a development environment
 
-Before anything, you'll need a sill-data repository that acts as a database of sort.  Find the instructions [here](<README (1).md#the-data-git-repository>).
+Before anything, you'll need a sill-data repository that acts as a database of sort. Find the instructions [here](<README (1).md#the-data-git-repository>).
 
-Once you have it you should edit the .env.local.sh of both etalab/sill-web and etalab/sill-api .env.local.sh to adapt with your environement. &#x20;
+Once you have it you should edit the .env.local.sh of both etalab/sill-web and etalab/sill-api .env.local.sh to adapt with your environement.
 
 * etalab/sill-web: [.env.local.sh](https://github.com/etalab/sill-web/blob/main/.env.local.sh) and [here is the shema](https://github.com/etalab/sill-web/blob/5dfd9535e777400e20dcd45dd3baf6173273e620/src/configuration.ts#L14-L65).
 * etalab/sill-api: [.env.local.sh](https://github.com/etalab/sill-api/blob/main/.env.local.sh) and [here is the shema](https://github.com/etalab/sill-api/blob/main/src/server/configuration.ts).
 
-If you don't have a Keycloak server you can disable authentication by removing the  keycloakParams from [etalab/sill-api/.env.local.sh](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L5-L11) if you have one you must have [an environement variable](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L10) that holds the password of the "admin" user.
+If you don't have a Keycloak server you can disable authentication by removing the keycloakParams from [etalab/sill-api/.env.local.sh](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L5-L11) if you have one you must have [an environement variable](https://github.com/etalab/sill-api/blob/2a6016fbd408bded77acf3938e3c74cea76c53aa/.env.local.sh#L10) that holds the password of the "admin" user.
 
 Makes sur to put the name of your SSH key and the private key (generated when you created the sill-data repo) in your `~/.bash_profile` example:
 
@@ -84,7 +84,7 @@ Same, update [the package.json version number](https://github.com/etalab/sill-ap
 
 ### Starting with Docker
 
-This is how to build and start the Docker image of [etalab/sill-api](https://github.com/etalab/sill-api), you can adapt theses commands with [etalab/sill-web](https://github.com/etalab/sill-web). &#x20;
+This is how to build and start the Docker image of [etalab/sill-api](https://github.com/etalab/sill-api), you can adapt theses commands with [etalab/sill-web](https://github.com/etalab/sill-web).
 
 ```bash
 # In your ~/.bash_profile
@@ -108,7 +108,7 @@ CONFIGURATION=$(cat << EOF
     "locale": "locale"
   },
   "dataRepoSshUrl": "git@github.com:etalab/sill-data-test.git",
-  "sshPrivateKeyForGitName": "id_ed25519",
+  "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_FOR_GIT_NAME",
   "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY_FOR_GIT"
 }
 EOF
