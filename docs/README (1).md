@@ -270,8 +270,8 @@ helm install ingress-nginx ingress-nginx \
 At this point we assume that:
 
 * You have a Kubernetes cluster and `kubectl` configured
-* **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own. You can customise "**sill**" and "**sill-tmp**" to your likeing, for example you could chose **my-catalog.my-domain.net** and **\*.test-my-catalog.my-domain.net**.
-* You have an ingress controller configured with a default TLS certificate for **\*.sill-tmp.my-domain.net** and **sill.my-domain.net**.
+* **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own.&#x20;
+* You have an ingress controller configured with a TLS certificate for **sill.my-domain.net**. and **sill-auth.my-domain.net**.
 
 {% hint style="success" %}
 Through out this guide we make as if everything was instantaneous. In reality if you are testing on a small cluster you will need to wait several minutes after hitting `helm install` for the services to be ready.
