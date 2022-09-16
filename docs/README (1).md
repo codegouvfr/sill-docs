@@ -501,9 +501,7 @@ Theses are the information that you'll need to give to the France Connect team t
 Nom du fournisseur de service: "Socle interministériel de logiciels libres" ( ou SILL pour les intimes )
 URL de redirection de connexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint
 URL de redirection de déconnexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint/logout_response
-URL du bouton affichant AgentConnect: 
-Ici je ne suis pas sûr de comprendre ce que vous me demandez.
-Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.etalab.gouv.fr/
+URL du bouton affichant AgentConnect: Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.etalab.gouv.fr/
 Scopes désirés: given_name usual_name email organizational_unit
 Algorithme de la signature des userinfos: ES256
 Algorithme de la signature de l'id token: ES256
@@ -511,7 +509,7 @@ Algorithme de la signature de l'id token: ES256
 
 You'll also need to create a mapper for organizational\_unit -> agencyName.
 
-Go to Identity Providers -> Agent Connect -> Mappers -> create
+To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 
