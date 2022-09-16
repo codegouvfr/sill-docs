@@ -1,6 +1,6 @@
 # 🏁 Deploying the WebApp
 
-This is a step by step guide that will assist you in installing your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr).
+This is a step by step guide that will assist you in deploying your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr).
 
 ### The Data Git repository
 
