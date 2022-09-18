@@ -1,6 +1,6 @@
 # 👩💻 Setting up a development environment
 
-Before anything, you'll need a sill-data repository that acts as a database of sort. Find the instructions [here](<README (1).md#the-data-git-repository>).
+Before anything, you'll need a sill-data repository that acts as a database of sort. Find the instructions [here](deploying.md#the-data-git-repository).
 
 Once you have it you should edit the .env.local.sh of both etalab/sill-web and etalab/sill-api .env.local.sh to adapt with your environement.
 
