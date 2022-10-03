@@ -30,7 +30,7 @@ yarn
 yarn build
 npx tsc -w 
 # Open an other terminal in the same path
-yarn dev #Start the server on port 8080
+yarn dev #Start the server on port 8080, you have to restart each time you edit
 
 # Open a new terminal
 
@@ -60,7 +60,7 @@ You may want to debug theses lib directly in `sill-web`. To do so simply do (we 
 
 ```bash
 cd ~/github
-git clone https://github.com/etalab/sill-api
+git clone https://github.com/etalab/keycloakify
 cd sill-api
 yarn
 yarn build
