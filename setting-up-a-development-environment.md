@@ -27,7 +27,9 @@ cd sill-api
 yarn
 # Each time you change something on the server
 # you should re-run the two following command.
-yarn build # 'npx tsc -w' for watch mode compilation
+yarn build
+npx tsc -w 
+# Open an other terminal in the same path
 yarn dev #Start the server on port 8080
 
 # Open a new terminal
