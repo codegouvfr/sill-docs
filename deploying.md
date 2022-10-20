@@ -501,7 +501,15 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
    ]
  }</code></pre>
 
-Now our Keycloak server is configured.
+Finally you need to create mapper so that agencyName appears in the JWT. &#x20;
+
+Go to clients -> sill -> Mappers&#x20;
+
+* Name: `agency name`
+* Mapper type: `User attribute`
+* User attribute: `Agency Name`
+* Token claim name: `agency_name`
+* Claim JSON type: `string`
 
 #### Enabeling AgentConnect
 
