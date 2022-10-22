@@ -27,7 +27,7 @@ First of all you need to enable SSH autentication via private/public key on GitH
 * Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
 * Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
 
-Now you want to start from [etalab/sill-data-template](https://github.com/etalab/sill-data-template)
+Now you want to start from [etalab/sill-data-template](https://github.com/etalab/sill-data-template):
 
 * Click on the green button "_use this template_"
 * Check "_Include all branches_"
