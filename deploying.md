@@ -22,7 +22,7 @@ The data repo can be private or public and does not need to be hosted on GitHub.
 
 #### Instantiating your Data Git Repository
 
-First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using).
+First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using):
 
 * Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
 * Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
