@@ -536,7 +536,7 @@ You'll also need to create a mapper for organizational\_unit -> agencyName.
 
 To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 ### Instantiating the web app
 
