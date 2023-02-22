@@ -499,7 +499,8 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
 +      }
 +   }
    ]
- }</code></pre>
+ }
+</code></pre>
 
 Finally you need to create mapper so that agencyName appears in the JWT. &#x20;
 
@@ -513,7 +514,7 @@ Go to clients -> sill -> Mappers&#x20;
 
 #### Enabeling AgentConnect
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
 
@@ -535,7 +536,7 @@ You'll also need to create a mapper for organizational\_unit -> agencyName.
 
 To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
-<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
 ### Instantiating the web app
 
