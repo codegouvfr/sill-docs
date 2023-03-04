@@ -442,7 +442,7 @@ You can now login to the **administration console** of **https://sill-auth.my-do
       2. _Supported locales_: \<Select the languages you wish to support>
 2. Create a client called "sill"
    1. _Root URL_: **https://sill-auth.my-domain.net/**
-   2. _Valid redirect URIs_: **https://sill.my-domain.net/\***
+   2. _Valid redirect URIs_: **https://sill.my-domain.net/\* ( and http://localhost\* for developpement)**
    3. _Web origins_: **\***
 3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
 
