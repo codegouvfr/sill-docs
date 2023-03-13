@@ -412,7 +412,7 @@ api:
           "locale": "locale"
         },
         "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data.git",
-        "sshPrivateKeyForGitName": "id_ed25519",
+        "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
         "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY",
         "githubWebhookSecret": "$WEBHOOK_SECRET",
         "githubPersonalAccessToken": "$GITHUB_TOKEN",
