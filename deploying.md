@@ -49,7 +49,7 @@ By default the web app periodically checks the data repo for update.
 
 If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
 
-<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
 
@@ -136,7 +136,6 @@ KEYCLOAK_PASSWORD=yyyyyy
 cat << EOF > ./keycloak-values.yaml
 image:
   tag: "18.0.2-legacy"
-# The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
 
 nodeSelector:
@@ -146,28 +145,22 @@ tolerations:
     operator: "Exists"
 
 serviceAccount:
-  # Specifies whether a ServiceAccount should be created
   create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
-  # Additional annotations for the ServiceAccount
   annotations: {}
-  # Additional labels for the ServiceAccount
   labels: {}
-  # Image pull secrets that are attached to the ServiceAccount
   imagePullSecrets: []
 
-# SecurityContext for the entire Pod. Every container running in the Pod will inherit this SecurityContext. This might be relevant when other components of the environment inject additional containers into running Pods (service meshes are the most prominent example for this)
+
 podSecurityContext:
   fsGroup: 1000
 
-# SecurityContext for the Keycloak container
+
 securityContext:
   runAsUser: 1000
   runAsNonRoot: true
 
-# Additional init containers, e. g. for providing custom themes
+
 extraInitContainers: |
   - name: realm-ext-provider
     image: curlimages/curl
@@ -178,8 +171,8 @@ extraInitContainers: |
       - -c
       - |
         curl -L -f -S -o /extensions/keycloak-franceconnect-4.2.0.jar https://github.com/InseeFr/Keycloak-FranceConnect/releases/download/4.2.0/keycloak-franceconnect-4.2.0.jar
+        # Here be carefull, the version number should match the version of sill-web in production.
         curl -L -f -S -o /extensions/sill-web.jar https://github.com/codegouvfr/sill-web/releases/download/v0.0.1/keycloak-theme.jar
-        curl -L -f -S -o /extensions/keycloakify-starter.jar https://github.com/codegouvfr/keycloakify-starter/releases/latest/download/standalone-keycloak-theme.jar
     volumeMounts:
       - name: extensions
         mountPath: /extensions
@@ -197,7 +190,7 @@ extraEnv: |
   - name: KEYCLOAK_USER
     value: admin
   - name: KEYCLOAK_PASSWORD
-    value: akRX4Z9CatPHEw5EP70hL336ddzFeeDDD
+    value: $KEYCLOAK_PASSWORD
   - name: JGROUPS_DISCOVERY_PROTOCOL
     value: kubernetes.KUBE_PING
   - name: KUBERNETES_NAMESPACE
@@ -218,86 +211,47 @@ extraEnv: |
       -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0        -Djava.net.preferIPv4Stack=true        -Djboss.modules.system.pkgs=$JBOSS_MODULES_SYSTEM_PKGS   -Djava.awt.headless=true       -Dkeycloak.profile=preview
 
 service:
-  # Additional labels for headless and HTTP Services
   labels: {}
-  # key: value
-  # The Service type
   type: ClusterIP
-  # Optional IP for the load balancer. Used for services of type LoadBalancer only
   loadBalancerIP: ""
-  # The http Service port
   httpPort: 80
-  # The HTTP Service node port if type is NodePort
   httpNodePort: null
-  # The HTTPS Service port
   httpsPort: 8443
-  # The HTTPS Service node port if type is NodePort
   httpsNodePort: null
-  # The WildFly management Service port
   httpManagementPort: 9990
-  # The WildFly management Service node port if type is NodePort
   httpManagementNodePort: null
-  # Additional Service ports, e. g. for custom admin console
   extraPorts: []
-  # When using Service type LoadBalancer, you can restrict source ranges allowed
-  # to connect to the LoadBalancer, e. g. will result in Security Groups
-  # (or equivalent) with inbound source ranges allowed to connect
   loadBalancerSourceRanges: []
-  # Session affinity
-  # See https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-userspace
   sessionAffinity: ""
-  # Session affinity config
   sessionAffinityConfig: {}
 
 ingress:
-  # If `true`, an Ingress is created
   enabled: true
-  # The Service port targeted by the Ingress
   servicePort: http
-  # Ingress annotations
   annotations:
-    ## Resolve HTTP 502 error using ingress-nginx:
-    ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
     nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
 
-  # Additional Ingress labels
   labels: {}
-  # List of rules for the Ingress
   rules:
     - host: "tmp-auth-codegouv.lab.sspcloud.fr"
-      # Paths for the host
       paths:
         - path: /
           pathType: Prefix
-  # TLS configuration
   tls:
     - hosts:
         - tmp-auth-codegouv.lab.sspcloud.fr
       secretName: sill-tls
 
-## Network policy configuration
 networkPolicy:
-  # If true, the Network policies are deployed
   enabled: false
-
-  # Additional Network policy labels
   labels: {}
-
-  # Define all other external allowed source
-  # See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#networkpolicypeer-v1-networking-k8s-io
   extraFrom: []
 
 postgresql:
-  # If `true`, the Postgresql dependency is enabled
   enabled: true
-  # PostgreSQL User to create
   postgresqlUsername: keycloak
-  # PostgreSQL Password for the new user
-  postgresqlPassword: ksKph0ykgrb9kiv1y2is2k
-  # PostgreSQL Database to create
+  postgresqlPassword: "$POSTGRESQL_PASSWORD"
   postgresqlDatabase: keycloak
-  # Persistent Volume Storage configuration
-  # PostgreSQL network policy configuration
   networkPolicy:
     enabled: false
 
