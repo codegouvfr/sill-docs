@@ -13,7 +13,7 @@ Via [codegouvfr/paris-sspcloud](https://github.com/codegouvfr/paris-sspcloud)
 
 ### Source code
 
-* [codegouvfr/sill-docs](https://github.com/codegouvfr/sill-docs): This documentation website, you can alose request an access to [the GitBook](https://app.gitbook.com/o/w6D6SnLwCXQaMMSzcTvp/s/WfLZKgyNVcGm8CUpiWb0/) if you want a What You See Is What You Get editor.
+* [codegouvfr/sill-docs](https://github.com/codegouvfr/sill-docs): This documentation website (also editable via [GitBook](https://app.gitbook.com/o/w6D6SnLwCXQaMMSzcTvp/s/WfLZKgyNVcGm8CUpiWb0/)).
 * [codegouvfr/sill-web](https://github.com/codegouvfr/sill-web): The web application, runs in the browser.
 * [codegouvfr/sill-api](https://github.com/codegouvfr/sill-api): The RPC API consumed by the web application.
 * [codegouvfr/sill-data](https://github.com/codegouvfr/sill-data): Production database.
