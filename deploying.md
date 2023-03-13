@@ -1,6 +1,6 @@
 # 🏁 Deploying the WebApp
 
-This is a step by step guide that will assist you in deploying your own instance of [sill.etalab.gouv.fr](https://sill.etalab.gouv.fr).
+This is a step by step guide for deploying sill.code.gouv.fr
 
 ### The Data Git repository
 
@@ -51,16 +51,16 @@ Example:
 #### Enabling web hooks (optional)
 
 {% hint style="info" %}
-It is best to skip this first and come back to this when everything else is working properly since it's only a performance optimisation.&#x20;
+It is best to skip this first and come back to this when everything else is working properly since it's only a performance optimisation.
 {% endhint %}
 
-By default the web app checks periodically checks the data repo for update. &#x20;
+By default the web app checks periodically checks the data repo for update.
 
-If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update. &#x20;
+If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
 
 <figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 
-Type some random string as secret. You then need to provide it to sill-api so it know it can trust the ping to be genuin. &#x20;
+Type some random string as secret. You then need to provide it to sill-api so it know it can trust the ping to be genuin.
 
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
@@ -74,15 +74,13 @@ Pick one of the three and follow the guide.
 
 You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
 
-
-
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/eks" %}
 
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes" %}
 
 {% embed url="https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes" %}
 
-### Ingress controller
+#### Ingress controller
 
 Deploy an ingress controller on your cluster:
 
@@ -98,7 +96,7 @@ For Azure use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/aws/deploy.yaml
 ```
 
-### DNS
+#### DNS
 
 Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
 
@@ -136,7 +134,7 @@ If the address you got was ans IPv6 (`y:y:y:y:y:y:y:y`), create a `AAAA` record.
 * **https://sill-demo.my-domain.net** will be the url [your Onyxia instance](https://sill-demo.etalab.gouv.fr/catalog/helm-charts-sill) for enabling users to test the software.
 * **https://\*.sill-tmp.my-domain.net** will be the temporary test urls created by [Onyxia](https://www.onyxia.sh/).
 
-### SSL
+#### SSL
 
 In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool then get our ingress controller to use it.
 
@@ -194,13 +192,11 @@ If you are on a Mac or Window computer you can install [Docker desktop](https://
 Docker desktop isn't available on Linux, you can use [Kind](https://kind.sigs.k8s.io/) instead.
 {% endhint %}
 
-### Port Forwarding
+#### Port Forwarding
 
 You'll need to [forward the TCP ports 80 and 443 to your local machine](https://user-images.githubusercontent.com/6702424/174459930-23fb577c-11a2-49ef-a082-873f4139aca1.png). It's done from the administration panel of your domestic internet Box. If you're on a corporate network, no luck for you I'm afraid.
 
-### DNS
-
-
+#### DNS
 
 Let's assume you own the domain name **my-domain.net**, for the rest of the guide you should replace **my-domain.net** by a domain you actually own.
 
@@ -222,8 +218,6 @@ sill.my-domain.net CNAME jhon-doe-home.ddns.net.
 ```
 {% endhint %}
 
-
-
 {% hint style="info" %}
 Note that you can pick any subdomain you'd like in place of **sill**, **sill-auth**.
 {% endhint %}
@@ -231,7 +225,7 @@ Note that you can pick any subdomain you'd like in place of **sill**, **sill-aut
 * **https://sill.my-domain.net** will be the URL for [your instance of the SILL](https://sill.etalab.gouv.fr/).
 * **https://sill-auth.my-domain.net** will be the URL of [your Keycloak server](https://sill-auth.etalab.gouv.fr/auth/).
 
-### SSL
+#### SSL
 
 In this section we will obtain a TLS certificate issued by [LetsEncrypt](https://letsencrypt.org/) using the [certbot](https://certbot.eff.org/) commend line tool.
 
@@ -264,7 +258,7 @@ sudo kubectl create secret tls sill-tls \
     --cert /etc/letsencrypt/live/sill.$DOMAIN/fullchain.pem
 ```
 
-#### Ingress controller
+**Ingress controller**
 
 We'll install [ingress-nginx](https://kubernetes.github.io/ingress-nginx/) in our cluster ~~but any other ingress controller will do~~.
 
@@ -286,7 +280,7 @@ helm install ingress-nginx ingress-nginx \
 At this point we assume that:
 
 * You have a Kubernetes cluster and `kubectl` configured
-* **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own.&#x20;
+* **sill.my-domain.net** and **sill-auth.my-domain.net** are pointing to your cluster's external address. **my-domain.net** being a domain that you own.
 * You have an ingress controller configured with a TLS certificate for **sill.my-domain.net**. and **sill-auth.my-domain.net**.
 
 {% hint style="success" %}
@@ -502,9 +496,9 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
  }
 </code></pre>
 
-Finally you need to create mapper so that agencyName appears in the JWT. &#x20;
+Finally you need to create mapper so that agencyName appears in the JWT.
 
-Go to clients -> sill -> Mappers&#x20;
+Go to clients -> sill -> Mappers
 
 * Name: `agency name`
 * Mapper type: `User attribute`
