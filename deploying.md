@@ -17,43 +17,10 @@ The scrapping and update of the build branch is performed [once every four hour]
 
 #### Instantiating a new database instance
 
-First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using):
+* Click on the green button "_use this template_" and call it `sill-data`
+* Check "_Include all branches_
 
-* Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
-* Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
-
-Now you want to start from [codegouvfr/sill-data-template](https://github.com/codegouvfr/sill-data-template):
-
-* Click on the green button "_use this template_"
-* Check "_Include all branches_"
-* Navigate to the repo setting, security -> Secrets -> Actions, create two repository secrets:
-  * `SSH_PRIVATE_KEY_NAME` whith content `id_ed25519`
-  * `SSH_PRIVATE_KEY`_`NAME` and pass the content of_ `~/.ssh/id_ed25519` (it starts with `-----BEGIN OPENSSH PRIVATE KEY-----`)
-
-Congratulation! 🥳 You can changes something in the `software.json` file of the `main` branch and see `compiledData_public/private.json` on the `compiled-data` branch being automatically updated.
-
-{% hint style="warning" %}
-Note that [the CI is always using the latest version of the scrapping scrip](https://github.com/codegouvfr/sill-data-template/blob/41933d7ad1dc99ed1daa15fbebf9307b5b9c1ba5/.github/workflows/ci.yaml#L13)t. You probably want to keep it in sync with the version of `codegouvfr/sill-api` you have in prod (we depoly it later in this guide).
-
-Example:
-
-```diff
--npx -y -p sill-api@latest build-data
-+npx -y -p sill-api@X.Y.Z build-data
-```
-{% endhint %}
-
-#### Enabling web hooks (optional)
-
-By default the web app periodically checks the data repo for update.
-
-If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
-
-<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
-
-Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
-
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+####
 
 ### Provison a Kubernetes cluster
 
@@ -257,12 +224,12 @@ postgresql:
 
 EOF
 
-helm install keycloak codecentric/keycloak -f keycloak-values.yaml
+helm install keycloak codecentric/keycloak -f keycloak-values.yaml -n projet-sill
 ```
 
 You can now login to the **administration console** of **https://sill-auth.my-domain.net** and login using the credentials you have defined with `KEYCLOAK_USER` and `KEYCLOAK_PASSWORD`.
 
-1. Create a realm called "etalab" (or something else), go to **Realm settings**
+1. Create a realm called "codegouv" (or something else), go to **Realm settings**
    1. On the tab General
       1. _User Profile Enabled_: **On**
    2. On the tab **login**
@@ -284,8 +251,8 @@ You can now login to the **administration console** of **https://sill-auth.my-do
       3. _Internationalization_: **Enabled**
       4. _Supported locales_: **en fr**
 2. Create a client called "sill"
-   1. _Root URL_: **https://sill-auth.my-domain.net/**
-   2. _Valid redirect URIs_: **https://sill.my-domain.net/\* ( and http://localhost\* for developpement)**
+   1. _Root URL_: **https://sill.code.gouv.fr/**
+   2. _Valid redirect URIs_: **https://sill.code.gouv.fr/\* ( and http://localhost\* for developpement)**
    3. _Web origins_: **\***
 3. In **Authentication** (on the left panel) -> Tab **Required Actions** enable and set as default action **Therms and Conditions.**
 
@@ -383,221 +350,88 @@ To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
 ### Instantiating the web app
 
+First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using):
+
+* Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
+* Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
+
 helm repo add etalab https://etalab.github.io/helm-charts
 
 ```bash
-DOMAIN=my-domain.net
-SSH_PRIVATE_KEY_NAME=id_ed25521 # For example, generated earlyer
+SSH_PRIVATE_KEY_NAME=id_ed25519 # For example, generated earlyer
 SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
-DATA_REPO_SSH_URL="git@github.com:etalab/sill-data.git" # Replace by the repo you created earlyer
+DATA_REPO_SSH_URL="git@github.com:codegouvfr/sill-data.git" # Replace by the repo you created earlyer
 KEYCLOAK_PASSWORD=yyyyyy # Make sure it's the same that the one you defined earlyer
-
+WEBHOOK_SECRET=dSdSPxxxxxx # (optional) Some random caracters 
+GITHUB_TOKEN=ghp_xxxxxx # (optional) A token, just for the GitHub API rate limit.  
 
 cat << EOF > ./sill-values.yaml
-sill:
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    hosts:
-      - host: sill.etalab.gouv.fr
-    tls:
-      - hosts:
-          - sill.etalab.gouv.fr
-        secretName: sill-tls
-  ui:
-    replicaCount: 2
-    image:
-      version: 0.25.40
-    nodeSelector:
-      infra: "true"
-    tolerations:
-      - key: "infra"
-        operator: "Exists"
-    env:
-      CONFIGURATION: |
-         { 
-            "headerLinks": [
-               { 
-                  "label": "code.gouv.fr", 
-                  "iconId": "assuredWorkload", 
-                  "url": "https://code.gouv.fr" 
-               },
-               { 
-                  "label": { "fr": "Embarquement immédiat", "en": "Immediate boarding" }, 
-                  "iconId": "playCircleFilledWhite", 
-                  "url": "https://sill-demo.etalab.gouv.fr/" 
-               }
-            ]
-         }
-
-    
-  api:
-    replicaCount: 1
-    image:
-      version: 0.22.6
-    nodeSelector:
-      infra: "true"
-    tolerations:
-      - key: "infra"
-        operator: "Exists"
-    env:
-      CONFIGURATION: |
-        {
-          "keycloakParams": {
-            "url": "https://sill-auth.$DOMAIN/auth",
-            "realm": "etalab",
-            "clientId": "sill",
-            "termsOfServices": "https://sill.etalab.gouv.fr/tos_fr.md",
-            "adminPassword": "$KEYCLOAK_PASSWORD" 
-          },
-          "jwtClaims": {
-            "id": "sub",
-            "email": "email",
-            "agencyName": "agency_name",
-            "locale": "locale"
-          },
-          "dataRepoSshUrl": "$DATA_REPO_SSH_URL",
-          "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
-          "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY" 
-        }
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: sill.code.gouv.fr
+  tls:
+    - hosts:
+        - sill.code.gouv.fr
+web:
+  replicaCount: 2
+  image:
+    version: 0.0.1
+  nodeSelector:
+    infra: "true"
+  tolerations:
+    - key: "infra"
+      operator: "Exists"
+  
+api:
+  replicaCount: 1
+  image:
+    version: 0.0.1
+  nodeSelector:
+    infra: "true"
+  tolerations:
+    - key: "infra"
+      operator: "Exists"
+  env:
+    CONFIGURATION: |
+      {
+        "keycloakParams": {
+          "url": "https://auth.code.gouv.fr/auth",
+          "realm": "codegouv",
+          "clientId": "sill",
+          "termsOfServices": "https://sill.code.gouv.fr/tos_fr.md",
+          "adminPassword": "$KEYCLOAK_PASSWORD",
+          "agencyNameAttributeName:": "agencyName"
+        },
+        "jwtClaimByUserKey": {
+          "id": "sub",
+          "email": "email",
+          "agencyName": "agency_name",
+          "locale": "locale"
+        },
+        "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data.git",
+        "sshPrivateKeyForGitName": "id_ed25519",
+        "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY",
+        "githubWebhookSecret": "$WEBHOOK_SECRET",
+        "githubPersonalAccessToken": "$GITHUB_TOKEN",
+      }
 EOF
 
-helm install onyxia inseefrlab/onyxia -f etalab-values.yaml
+helm install sill codegouvfr/sill -f sill-values.yaml -n projet-sill
 ```
 
-You can now access `https://sill.my-domain.net`. Congratulations! 🥳
+### Enabling web hooks
 
-### Onyxia instance for testing the softwares (like [https://sill-demo.etalab.gouv.fr/](https://sill-demo.etalab.gouv.fr/))
+By default the web app periodically checks the data repo for update.
 
-You will find a guide [here](https://docs.onyxia.sh/) on how to deploy an Onyxia instance.
+If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
 
-This is the value to instantiate Onyxia agaist the catalog [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill):
+<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
-```yaml
-onyxia:
-  serviceAccount:
-    create: true
-    clusterAdmin: false
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    hosts:
-      - host: sill-demo.etalab.gouv.fr
-    tls:
-      - hosts:
-          - sill-demo.etalab.gouv.fr
-        secretName: sill-tls 
-  ui:
-    replicaCount: 2
-    image:
-      name: inseefrlab/onyxia-web
-      version: 0.59.0
-    nodeSelector:
-      infra: "true"
-    tolerations:
-      - key: "infra"
-        operator: "Exists"
-    env:
-      KEYCLOAK_URL: https://sill-auth.etalab.gouv.fr/auth
-      KEYCLOAK_REALM: etalab
-      KEYCLOAK_CLIENT_ID: onyxia-sill
-      HEADER_ORGANIZATION: Etalab
-      JWT_USERNAME_CLAIM: sub
-      #TERMS_OF_SERVICES: https://etalab.github.com/helm-charts-sill/tos-fr.md
-      HIGHLIGHTED_PACKAGES: |
-        [ "flarum", "nocodb", "ubuntu", "jupyter", "elastic" ]
-      HEADER_USECASE_DESCRIPTION: "Embarquement immédiat"
-      HEADER_LINKS: |
-        [
-          { 
-            "label": "code.gouv.fr", 
-            "iconId": "assuredWorkload", 
-            "url": "https://code.gouv.fr" 
-          }, 
-          { 
-            "label": "Le SILL", 
-            "iconId": "grading", 
-            "url": "https://sill.etalab.gouv.fr" 
-          }
-        ]
-      DISABLE_HOME_PAGE: true
-      THEME_ID: france
-      DESCRIPTION: |
-        Une plateforme pour essayer les logiciels du socle interministériel du numérique en quelques clics sans quitter le navigateur.
-      HEADER_HIDE_ONYXIA: true
+Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
 
-  api:
-    replicaCount: 3
-    image:
-      name: inseefrlab/onyxia-api
-      pullPolicy: "Always"
-    nodeSelector:
-      infra: "true"
-    tolerations:
-      - key: "infra"
-        operator: "Exists"
-    env:
-      security.cors.allowed_origins: "*"
-      keycloak.resource: onyxia
-      keycloak.realm: etalab
-      keycloak.auth-server-url: https://sill-auth.etalab.gouv.fr/auth
-      keycloak.ssl-required: external
-      keycloak.public-client: "true"
-      keycloak.enable-basic-auth: "true"
-      keycloak.bearer-only: "true"
-      authentication.mode: "openidconnect"
-      springdoc.swagger-ui.oauth.clientId: onyxia
-      catalog.refresh.ms: "300000"
-    catalogs: 
-      [
-        {
-          "id": "helm-charts-sill",
-          "name": "Logiciels du SILL",
-          "description": "Un repo avec les logiciels du sill qu'il est possible de tester.",
-          "maintainer": "joseph.garrone@data.gouv.fr",
-          "location": "https://etalab.github.io/helm-charts-sill",
-          "status": "PROD",
-          "type": "helm"
-        }
-      ]
-    regions: 
-      [
-        {
-          "id": "paris",
-          "name": "Kubernetes DG Insee",
-          "description": "Region principale. Plateforme hébergée sur les serveurs de la direction générale de l'INSEE à Montrouge.",
-          "services": {
-            "type": "KUBERNETES",
-            "singleNamespace": true,
-            "namespacePrefix": "user-",
-            "usernamePrefix": "oidc-",
-            "groupNamespacePrefix": "projet-",
-            "groupPrefix": "oidc-",
-            "authenticationMode": "admin",
-            "expose": { "domain": "kub.sspcloud.fr" },
-            "monitoring": { "URLPattern": "https://grafana.lab.sspcloud.fr/d/kYYgRWBMz/users-services?orgId=1&refresh=5s&var-namespace=$NAMESPACE&var-instance=$INSTANCE" },
-            "cloudshell": {
-              "catalogId": "inseefrlab-helm-charts-datascience",
-              "packageName": "cloudshell"
-            },
-            "quotas": {
-                "enabled": true,
-                "allowUserModification": true,
-                "default": {
-                  "requests.storage": "1Ti",
-                  "count/pods": "100"
-                }
-              },
-              "defaultConfiguration": {
-                "ipprotection": true,
-                "networkPolicy": true
-              },
-            "initScript": "https://InseeFrLab.github.io/onyxia/onyxia-init.sh"
-          },
-          "auth": { "type": "openidconnect" },
-          "location": { "lat": 48.8164, "long": 2.3174, "name": "Montrouge (France)" }
-        }
-      ]
-```
+<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
+sdf
