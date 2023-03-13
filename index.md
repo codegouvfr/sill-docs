@@ -1,33 +1,22 @@
 ---
-description: >-
-  Hub for everything about the application behind the list of recommended free
-  software for the French public sector (SILL).
+description: Hub for everything about the application behind sill.code.gouv.fr
 ---
 
 # 🎯 Index
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>Screenshot of the mail page of the WebApp</p></figcaption></figure>
+### Deployment
+
+Via [codegouvfr/paris-sspcloud](https://github.com/codegouvfr/paris-sspcloud)
+
+* Prod:        [apps/sill](https://github.com/codegouvfr/paris-sspcloud/tree/main/apps/sill)               -> [https://sill.code.gouv.fr](https://sill.code.gouv.fr)
+* Preprod:  [apps/sill-preprod](https://github.com/codegouvfr/paris-sspcloud/tree/main/apps/sill-preprod) -> [https://sill-preprod.lab.sspcloud.fr](https://sill-preprod.lab.sspcloud.fr)&#x20;
 
 ### Source code
 
-* The source Markdown for this documentation website. You can also request an access to the [the GitBook](https://app.gitbook.com/o/w6D6SnLwCXQaMMSzcTvp/s/WfLZKgyNVcGm8CUpiWb0/)
-* Frontend: [etalab/sill-web](https://github.com/etalab/sill-web)
-* Backend: [etalab/sill-api](https://github.com/etalab/sill-api)
-* Data (source of truth, **private repository**): [etalab/sill-data](https://github.com/etalab/sill-data)
-  * The compiled public data are available at [etalab/sill-data#build](https://github.com/etalab/sill-data/tree/build) (the [`build`](https://github.com/etalab/sill-data/tree/build) branch of the [etalab/sill-data](https://github.com/etalab/sill-data) repo)
-  * The data (without the referent information) can be downloaded here: [sill.json](https://sill.etalab.gouv.fr/api/sill.json)
-* Helm package of the SILL WebApp: [etalab/helm-charts/charts/sill](https://github.com/etalab/helm-charts/tree/main/charts/sill) (for installing the WebApp on a Kubernetes cluster with `helm install sill`).
-* GitOps deployment: [etalab/paris-sspcloud/apps/sill](https://github.com/etalab/paris-sspcloud/tree/main/apps/sill) (It's a private repo that is monitored by ArgoCD)
+* [codegouvfr/sill-docs](https://github.com/codegouvfr/sill-docs): This documentation website, you can alose request an access to [the GitBook](https://app.gitbook.com/o/w6D6SnLwCXQaMMSzcTvp/s/WfLZKgyNVcGm8CUpiWb0/) if you want a What You See Is What You Get editor.
+* [codegouvfr/sill-web](https://github.com/codegouvfr/sill-web): The web application, runs in the browser.
+* [codegouvfr/sill-api](https://github.com/codegouvfr/sill-api): The RPC API consumed by the web application.
+* [codegouvfr/sill-data](https://github.com/codegouvfr/sill-data): Production database.
+* [codegouvfr/sill-data-test](https://github.com/codegouvfr/sill-data-test): Preprod database
+* [codegouvfr/sill-data-template](https://github.com/codegouvfr/sill-data-template): Template for creating new database.
 
-### Deployment
-
-#### SILL
-
-* Prod: [https://sill.etalab.gouv.fr](https://sill.etalab.gouv.fr/software)
-* Dev: [https://sill-dev.lab.sspcloud.fr](https://sill-dev.lab.sspcloud.fr/) (With test data: [etalab/sill-data-test](https://github.com/etalab/sill-data-test))
-
-#### SILL Demos (aka "Embarquement immédiat")
-
-* [https://sill-demo.etalab.gouv.fr](https://sill-demo.etalab.gouv.fr/)
-* Helm charts of the testable software of the SILL: [etalab/helm-charts-sill](https://github.com/etalab/helm-charts-sill)
-* GitOps deployment: [etalab/paris-sspcloud/apps/onyxia-sill](https://github.com/etalab/paris-sspcloud/tree/main/apps/onyxia-sill) (private repo)
