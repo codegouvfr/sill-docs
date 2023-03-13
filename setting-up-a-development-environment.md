@@ -14,25 +14,36 @@ You'll need [Node](https://nodejs.org/) and [Yarn 1.x](https://classic.yarnpkg.c
 It is much easyer to navigate the code with VSCode (We recommend the free distribution [VSCodium](https://sill.etalab.gouv.fr/software?name=VSCodium)).
 
 ```bash
-cd ~/github
-git clone https://github.com/etalab/sill-api
-cd sill-api
-yarn
-# Each time you change something on the server
-# you should re-run the two following command.
-yarn build
-npx tsc -w 
-# Open an other terminal in the same path
-yarn dev #Start the server on port 8080, you have to restart each time you edit
+#Only the first time
 
-# Open a new terminal
+mkdir ~/sill
 
-cd ~/github
-git clone https://github.com/etalab/sill-web
+cd ~/sill
+git clone https://github.com/codegouvfr/sill-web
 cd sill-web
 yarn
-yarn link_api #This make sure that you use your local version of "sill-web" and not the latest NPM release.
-yarn start #The app is running on http://localhost:3000
+
+cd ~/sill
+git clone https://github.com/codegouvfr/sill-api
+cd sill-api
+yarn
+yarn build
+yarn link-in-web
+
+# Everyday
+
+cd ~/sill/sill-api
+npx tsc -w
+
+# Open a new terminal
+cd ~/sill/sill-api
+yarn dev # Note, there is no hot reload.  
+
+#Open a new terminal
+cd ~/sill/sill-web
+yarn start
+
+#The app is running on http://localhost:3000
 ```
 
 ### Deploying changes in production
@@ -44,5 +55,3 @@ Update [the package.json version number](https://github.com/etalab/sill-web/blob
 #### Backend (sill-api)
 
 Same, update [the package.json version number](https://github.com/etalab/sill-api/blob/77703b6ec2874792ad7d858f29b53109ee590de1/package.json#L3) and push. Don't forget however [to wait](https://github.com/etalab/sill-api/actions) for the latest version [to be published on NPM](https://www.npmjs.com/package/sill-api). And update the version [sill-web's package.json](https://github.com/etalab/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L48). (You'll need to update the package.lock as well by running `yarn` again, you can just run `yarn add @codegouvfr/sill`, it's faster).
-
-###
