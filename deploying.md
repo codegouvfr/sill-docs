@@ -438,9 +438,8 @@ You can now login to the **administration console** of **https://sill-auth.my-do
    4. On the tab Themes
       1. _Login theme_: **sill-web** (you can also select the login theme on a per client basis)
       2. _Email theme_: **sill-web**
-   5. On the tab **Localization**
-      1. _Internationalization_: **Enabled**
-      2. _Supported locales_: \<Select the languages you wish to support>
+      3. _Internationalization_: **Enabled**
+      4. _Supported locales_: **en fr**
 2. Create a client called "sill"
    1. _Root URL_: **https://sill-auth.my-domain.net/**
    2. _Valid redirect URIs_: **https://sill.my-domain.net/\* ( and http://localhost\* for developpement)**
