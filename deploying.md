@@ -336,7 +336,7 @@ Theses are the information that you'll need to give to the France Connect team t
 Nom du fournisseur de service: "Socle interministériel de logiciels libres" ( ou SILL pour les intimes )
 URL de redirection de connexion: https://sill-auth.my-domain.net/auth/realms/codegouv/broker/agentconnect/endpoint
 URL de redirection de déconnexion: https://sill-auth.my-domain.net/auth/realms/codegouv/broker/agentconnect/endpoint/logout_response
-URL du bouton affichant AgentConnect: Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.etalab.gouv.fr/
+URL du bouton affichant AgentConnect: Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.code.gouv.fr/
 Scopes désirés: given_name usual_name email organizational_unit
 Algorithme de la signature des userinfos: ES256
 Algorithme de la signature de l'id token: ES256
