@@ -312,6 +312,10 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
  }
 </code></pre>
 
+{% hint style="info" %}
+We create the User Profile Attribute "agencyName" instead of organization because of legacy reasons. Our database of user use this name and we can't migrate.&#x20;
+{% endhint %}
+
 Finally you need to create mapper so that agencyName appears in the JWT.
 
 Go to clients -> sill -> Mappers
