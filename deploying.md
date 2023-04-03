@@ -299,7 +299,7 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
 +        ]
 +      },
 +      "name": "agencyName",
-+      "displayName": "${agencyName}",
++      "displayName": "${organization}",
 +      "validations": {},
 +      "required": {
 +        "roles": [
