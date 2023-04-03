@@ -334,8 +334,8 @@ Theses are the information that you'll need to give to the France Connect team t
 
 ```
 Nom du fournisseur de service: "Socle interministériel de logiciels libres" ( ou SILL pour les intimes )
-URL de redirection de connexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint
-URL de redirection de déconnexion: https://sill-auth.my-domain.net/auth/realms/etalab/broker/agentconnect/endpoint/logout_response
+URL de redirection de connexion: https://sill-auth.my-domain.net/auth/realms/codegouv/broker/agentconnect/endpoint
+URL de redirection de déconnexion: https://sill-auth.my-domain.net/auth/realms/codegouv/broker/agentconnect/endpoint/logout_response
 URL du bouton affichant AgentConnect: Le bouton AgentConnect sera affiché sur la page le login, on accède a la page de login en cliquant sur "Connexion" en haut à droite de l'écran sur https://sill.etalab.gouv.fr/
 Scopes désirés: given_name usual_name email organizational_unit
 Algorithme de la signature des userinfos: ES256
@@ -355,7 +355,9 @@ First of all you need to enable SSH autentication via private/public key on GitH
 * Generate a priv/pub key if you don't have one already: `ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "john@example.com"`
 * Got to your global GitHub setting, then SSH and GPG Keys, new SSH Key and pass the content of `~/.ssh/id_ed25519.pub`.
 
-helm repo add etalab https://etalab.github.io/helm-charts
+```bash
+helm repo add codegouvfr https://codegouvfr.github.io/helm-charts
+```
 
 ```bash
 SSH_PRIVATE_KEY_NAME=id_ed25519 # For example, generated earlyer
