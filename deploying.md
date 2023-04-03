@@ -316,10 +316,10 @@ Finally you need to create mapper so that agencyName appears in the JWT.
 
 Go to clients -> sill -> Mappers
 
-* Name: `agency name`
+* Name: `organization`
 * Mapper type: `User attribute`
-* User attribute: `Agency Name`
-* Token claim name: `agency_name`
+* User attribute: `agencyName`
+* Token claim name: `organization`
 * Claim JSON type: `string`
 
 #### Enabeling AgentConnect
@@ -346,7 +346,7 @@ You'll also need to create a mapper for organizational\_unit -> agencyName.
 
 To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 ### Instantiating the web app
 
