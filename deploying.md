@@ -369,7 +369,7 @@ SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nx
 DATA_REPO_SSH_URL="git@github.com:codegouvfr/sill-data.git" # Replace by the repo you created earlyer
 KEYCLOAK_PASSWORD=yyyyyy # Make sure it's the same that the one you defined earlyer
 WEBHOOK_SECRET=dSdSPxxxxxx # (optional) Some random caracters 
-GITHUB_TOKEN=ghp_xxxxxx # (optional) A token, just for the GitHub API rate limit.  
+GITHUB_TOKEN=ghp_xxxxxx # A token, just for the GitHub API rate limit.  
 
 cat << EOF > ./sill-values.yaml
 ingress:
@@ -407,22 +407,22 @@ api:
           "url": "https://auth.code.gouv.fr/auth",
           "realm": "codegouv",
           "clientId": "sill",
-          "termsOfServices": "https://sill.code.gouv.fr/tos_fr.md",
           "adminPassword": "$KEYCLOAK_PASSWORD",
-          "agencyNameAttributeName:": "agencyName"
+          "agencyNameAttributeName": "agencyName"
         },
+        "termsOfServiceUrl": "https://sill-preprod.lab.sspcloud.fr/tos_fr.md",
+        "readmeUrl": "https://git.sr.ht/~etalab/logiciels-libres/blob/master/sill.md",
         "jwtClaimByUserKey": {
           "id": "sub",
           "email": "email",
-          "agencyName": "agency_name",
-          "locale": "locale"
+          "organization": "organization"
         },
-        "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data.git",
+        "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data-test.git",
         "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
         "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY",
-        "githubWebhookSecret": "$WEBHOOK_SECRET",
-        "githubPersonalAccessToken": "$GITHUB_TOKEN",
+        "githubPersonalAccessTokenForApiRateLimit": "$GITHUB_TOKEN",
       }
+
 EOF
 
 helm install sill codegouvfr/sill -f sill-values.yaml -n projet-sill
