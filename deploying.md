@@ -408,7 +408,7 @@ api:
           "realm": "codegouv",
           "clientId": "sill",
           "adminPassword": "$KEYCLOAK_PASSWORD",
-          "agencyNameAttributeName": "agencyName"
+          "organizationUserProfileAttributeName": "agencyName"
         },
         "termsOfServiceUrl": "https://sill-preprod.lab.sspcloud.fr/tos_fr.md",
         "readmeUrl": "https://git.sr.ht/~etalab/logiciels-libres/blob/master/sill.md",
