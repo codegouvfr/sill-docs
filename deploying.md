@@ -420,6 +420,7 @@ api:
         "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data-test.git",
         "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_NAME",
         "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY",
+        "githubWebhookSecret": "$WEBHOOK_SECRET",
         "githubPersonalAccessTokenForApiRateLimit": "$GITHUB_TOKEN",
       }
 
@@ -434,7 +435,7 @@ By default the web app periodically checks the data repo for update.
 
 If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
 
-<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/Untitled.png" alt=""><figcaption></figcaption></figure>
 
 Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
 
