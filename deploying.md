@@ -328,7 +328,7 @@ Go to clients -> sill -> Mappers
 
 #### Enabeling AgentConnect
 
-<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+![](<.gitbook/assets/image (3).png>)
 
 To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
 
