@@ -11,7 +11,7 @@ export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nXXX\nXXX\nX
 
 You'll need [Node](https://nodejs.org/) and [Yarn 1.x](https://classic.yarnpkg.com/lang/en/). (Find [here](https://docs.gitlanding.dev/#step-by-step-guide) instructions by OS on how to install them)
 
-It is much easyer to navigate the code with VSCode (We recommend the free distribution [VSCodium](https://sill.etalab.gouv.fr/software?name=VSCodium)).
+It is much easyer to navigate the code with VSCode (We recommend the free distribution [VSCodium](https://sill.code.gouv.fr/software?name=VSCodium)).
 
 ```bash
 #Only the first time
@@ -50,8 +50,8 @@ yarn start
 
 #### Frontend (sill-web)
 
-Update [the package.json version number](https://github.com/etalab/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L4) and push.
+Update [the package.json version number](https://github.com/codegouvfr/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L4) and push.
 
 #### Backend (sill-api)
 
-Same, update [the package.json version number](https://github.com/etalab/sill-api/blob/77703b6ec2874792ad7d858f29b53109ee590de1/package.json#L3) and push. Don't forget however [to wait](https://github.com/etalab/sill-api/actions) for the latest version [to be published on NPM](https://www.npmjs.com/package/sill-api). And update the version [sill-web's package.json](https://github.com/etalab/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L48). (You'll need to update the package.lock as well by running `yarn` again, you can just run `yarn add @codegouvfr/sill`, it's faster).
+Same, update [the package.json version number](https://github.com/codegouvfr/sill-api/blob/77703b6ec2874792ad7d858f29b53109ee590de1/package.json#L3) and push. Don't forget however [to wait](https://github.com/codegouvfr/sill-api/actions) for the latest version [to be published on NPM](https://www.npmjs.com/package/sill-api). And update the version [sill-web's package.json](https://github.com/codegouvfr/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L48). (You'll need to update the package.lock as well by running `yarn` again, you can just run `yarn add @codegouvfr/sill`, it's faster).

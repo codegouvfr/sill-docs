@@ -8,8 +8,8 @@ This is a step by step guide for deploying sill.code.gouv.fr
 
 The data are stored in a [git based database](https://github.com/codegouvfr/sill-data-template).
 
-* [the **main** branch](https://github.com/etalab/sill-data-template/tree/main): Each `.json` file represent a table like in any relational database.
-* [the **compiled-data** branch](https://github.com/etalab/sill-data-template/tree/compiled-data): Contains two `.json` files. The first one, [compiledData\_private.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_private.json) contains all the information that we have in [our database](https://github.com/etalab/sill-data-template/tree/main) and also the ones collected from different sources like Wikidata or LeComptoirDuLibre, compiled into a single file. This file contains emails of agents and should not be shared publicly. [compiledData\_public.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_public.json) on the other end cand be shared, its the same file minus the personal infos about the agents. &#x20;
+* [the **main** branch](https://github.com/codegouvfr/sill-data-template/tree/main): Each `.json` file represent a table like in any relational database.
+* [the **compiled-data** branch](https://github.com/codegouvfr/sill-data-template/tree/compiled-data): Contains two `.json` files. The first one, [compiledData\_private.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_private.json) contains all the information that we have in [our database](https://github.com/codegouvfr/sill-data-template/tree/main) and also the ones collected from different sources like Wikidata or LeComptoirDuLibre, compiled into a single file. This file contains emails of agents and should not be shared publicly. [compiledData\_public.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_public.json) on the other end cand be shared, its the same file minus the personal infos about the agents. &#x20;
 
 There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way around is true as well.
 
@@ -411,7 +411,7 @@ api:
           "organizationUserProfileAttributeName": "agencyName"
         },
         "termsOfServiceUrl": "https://sill-preprod.lab.sspcloud.fr/tos_fr.md",
-        "readmeUrl": "https://git.sr.ht/~etalab/logiciels-libres/blob/master/sill.md",
+        "readmeUrl": "https://git.sr.ht/~codegouvfr/logiciels-libres/blob/main/sill.md",
         "jwtClaimByUserKey": {
           "id": "sub",
           "email": "email",

@@ -18,7 +18,7 @@ La version publique de la liste indiquait les logiciels libres utilisés au sein
 
 Cette liste servaient aux DSI des ministères à faire les mises à jour nécessaires et à découvrir des logiciels libres utilisés par d'autres ministères.
 
-En 2019, le SILL a été publié sous forme d'une application web à l'adresse https://sill.etalab.gouv.fr.  La page de visualisation était générée à partir de fichiers `csv` maintenus manuellement sur un dépôt public.
+En 2019, le SILL a été publié sous forme d'une application web à l'adresse https://sill.etalab.gouv.fr, qui redirige vers https://sill.code.gouv.fr depuis février 2023.  La page de visualisation était générée à partir de fichiers `csv` maintenus manuellement sur un dépôt public.
 
 En 2022, le SILL a été repensé pour permettre aux agents publics de référencer eux-mêmes des logiciels libres ou de contacter directement l'agent public référent d'un logiciel.  Cette nouvelle version a également vocation de permettre aux agents inscrits des logiciels au sein même de leur navigateur.
 
