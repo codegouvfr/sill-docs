@@ -9,7 +9,7 @@ This is a step by step guide for deploying sill.code.gouv.fr
 The data are stored in a [git based database](https://github.com/codegouvfr/sill-data-template).
 
 * [the **main** branch](https://github.com/codegouvfr/sill-data-template/tree/main): Each `.json` file represent a table like in any relational database.
-* [the **compiled-data** branch](https://github.com/codegouvfr/sill-data-template/tree/compiled-data): Contains two `.json` files. The first one, [compiledData\_private.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_private.json) contains all the information that we have in [our database](https://github.com/codegouvfr/sill-data-template/tree/main) and also the ones collected from different sources like Wikidata or LeComptoirDuLibre, compiled into a single file. This file contains emails of agents and should not be shared publicly. [compiledData\_public.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_public.json) on the other end cand be shared, its the same file minus the personal infos about the agents. &#x20;
+* [the **compiled-data** branch](https://github.com/codegouvfr/sill-data-template/tree/compiled-data): Contains two `.json` files. The first one, [compiledData\_private.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_private.json) contains all the information that we have in [our database](https://github.com/codegouvfr/sill-data-template/tree/main) and also the ones collected from different sources like Wikidata or LeComptoirDuLibre, compiled into a single file. This file contains emails of agents and should not be shared publicly. [compiledData\_public.json](https://github.com/codegouvfr/sill-data-template/blob/build/compiledData\_public.json) on the other end cand be shared, its the same file minus the personal infos about the agents.
 
 There is a bidirectional relationship betwen the Web App and the Data repo, when you update the data repo it updates the web App and the other way around is true as well.
 
@@ -24,9 +24,7 @@ The scrapping and update of the build branch is performed [once every four hour]
 
 ### Provison a Kubernetes cluster
 
-
-
-Currently we use the SSPCloud to deploy the SILL but if you have to deploy from scratch here is how provison and setup a Kubernetes cluser from a cloud provider. &#x20;
+Currently we use the SSPCloud to deploy the SILL but if you have to deploy from scratch here is how provison and setup a Kubernetes cluser from a cloud provider.
 
 [Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).
 
@@ -34,11 +32,11 @@ Pick one of the three and follow the guide.
 
 You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
 
-{% embed url="https://learn.hashicorp.com/tutorials/terraform/eks" %}
+{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks" %}
 
-{% embed url="https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes" %}
+{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke?in=terraform%2Fkubernetes" %}
 
-{% embed url="https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes" %}
+{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/aks?in=terraform%2Fkubernetes" %}
 
 ### Installing an ingress controller
 
@@ -313,7 +311,7 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
 </code></pre>
 
 {% hint style="info" %}
-We create the User Profile Attribute "agencyName" instead of organization because of legacy reasons. Our database of user use this name and we can't migrate.&#x20;
+We create the User Profile Attribute "agencyName" instead of organization because of legacy reasons. Our database of user use this name and we can't migrate.
 {% endhint %}
 
 Finally you need to create mapper so that agencyName appears in the JWT.
