@@ -244,8 +244,8 @@ You can now login to the **administration console** of **https://sill-auth.my-do
       6. _Password_: **\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\***
       7. When clicking "save" you'll be asked for a test email, you have to provide one that correspond **to a pre-existing user** or you will get a silent error and the credentials won't be saved.
    4. On the tab Themes
-      1. _Login theme_: **sill-web** (you can also select the login theme on a per client basis)
-      2. _Email theme_: **sill-web**
+      1. _Login theme_: **dsfr** (you can also select the login theme on a per client basis)
+      2. _Email theme_: **dsfr**
       3. _Internationalization_: **Enabled**
       4. _Supported locales_: **en fr**
 2. Create a client called "sill"
