@@ -1,4 +1,4 @@
-# 🏁 Deploying the WebApp
+# 🏁 Deploying the web App (Kubernetes)
 
 This is a step by step guide for deploying sill.code.gouv.fr
 
@@ -18,9 +18,7 @@ The scrapping and update of the build branch is performed [once every four hour]
 #### Instantiating a new database instance
 
 * Click on the green button "_use this template_" and call it `sill-data`
-* Check "_Include all branches_
-
-####
+* Check "_Include all branches"_
 
 ### Provison a Kubernetes cluster
 
@@ -438,5 +436,3 @@ If you want, and if you data repo is hosted on GitHub you can enable a Webhook t
 Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
 
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
-
-sdf
