@@ -37,7 +37,7 @@ npx tsc -w
 
 # Open a new terminal
 cd ~/sill/sill-api
-yarn dev # Note, there is no hot reload.  
+yarn start # Note, there is no hot reload.  
 
 #Open a new terminal
 cd ~/sill/sill-web
