@@ -26,7 +26,9 @@ In this section we make the following assumption: &#x20;
     `code.gouv.fr A <The public IPv4 of your Debian server>`
 * You have a valid GitHub Personal Access token, it does not need to have any permission, it's just used for increasing rate limit when we scrap information on the softwares like the latest version published. &#x20;
 
-### Steps to be performet only once
+### Initial setup
+
+Here are steps that are to be perfomed only once, for setting up everything.
 
 {% code title="ssh code.gouv.fr" %}
 ```bash
@@ -134,7 +136,12 @@ server {
 }
 ```
 
-### Steps to be performed to put in production the latest version
+### Update & build
+
+This is the protocoll to follow whenever a new version of the sill have been published.  \
+We checkout the latest tag, install the new dependencies (if any) and re-build.
+
+Don't forget to re-lauch the app afterward. &#x20;
 
 {% code title="ssh code.gouv.fr" %}
 ```bash
@@ -154,7 +161,9 @@ yarn build
 ```
 {% endcode %}
 
-### Start the web app
+### Start
+
+These are the step to start both the frontend and the backend respectively on port 3048 and 3049 .
 
 {% code title="ssh code.gouv.fr" %}
 ```bash
