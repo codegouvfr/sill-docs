@@ -57,8 +57,6 @@ export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25xxxx"
 export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
 export GITHUB_SILL_WEBHOOK_SECRET=xxxxxxxx
 EOF
-
-source ~/.bashrc
 ```
 {% endcode %}
 
@@ -99,6 +97,42 @@ EOF
 $@
 ```
 {% endcode %}
+
+#### Ngnix configuration
+
+We assume you already have NGNIX installed and you have a TLS certificate for the domain code.gouv.fr under `/etc/letsencrypt/live/code.gouv.fr/{fullchan,privkey}.pem`
+
+```nginx
+# /etc/nginx/sites-available/code.gouv.fr
+
+server {
+    listen 80;
+    server_name code.gouv.fr;
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    server_name code.gouv.fr;
+
+    ssl_certificate /etc/letsencrypt/live/code.gouv.fr/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/code.gouv.fr/privkey.pem;
+
+    location ~ ^/sill/api {
+        proxy_pass http://localhost:3049;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location ~ ^/sill {
+        proxy_pass http://localhost:3048;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
 
 ### Steps to be performed to put in production the latest version
 
