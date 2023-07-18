@@ -24,11 +24,12 @@ In this section we make the following assumption: &#x20;
 *   You own the domain code.gouv.fr and you have registered the DNS recod:
 
     `code.gouv.fr A <The public IPv4 of your Debian server>`
+* You have a valid GitHub Personal Access token, it does not need to have any permission, it's just used for increasing rate limit when we scrap information on the softwares like the latest version published. &#x20;
 
+### Steps to be performet only once
 
-
+{% code title="ssh code.gouv.fr" %}
 ```bash
-ssh code.gouv.fr
 
 sudo apt-get update
 
@@ -39,29 +40,35 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y 
 exit
 
 sudo npm install -g yarn
+sudo npm install -g serve
 
 mkdir ~/sill
 cd sill
 
 sudo apt-get install git
 git clone https://github.com/codegouvfr/sill-api
+git clone https://github.com/codegouvfr/sill
 
-cd sill-api
+# Don't forget to replace by the correct values!
+cat << EOF >> ~/.bashrc
+export GITHUB_TOKEN=ghp_xxxxxx
+export KEYCLOAK_CODEGOUV_ADMIN_PASSWORD=xxxxxx
+export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25519"
+export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
+export GITHUB_SILL_WEBHOOK_SECRET=xxxxxxxx
+EOF
 
-# Install dependencies
-yarn
-
-# Build the project
-yarn build
-
-vim .env.local.sh
+source ~/.bashrc
 ```
+{% endcode %}
 
+Edit the SILL api configuration:
 
+{% code title="~/sill-api/.env.local.sh" %}
+```diff
+#!/bin/bash
 
-<pre class="language-diff"><code class="lang-diff">#!/bin/bash
-
-export CONFIGURATION=$(cat &#x3C;&#x3C; EOF
+export CONFIGURATION=$(cat << EOF
 {
   "keycloakParams": {
     "url": "https://auth.code.gouv.fr/auth",
@@ -83,13 +90,53 @@ export CONFIGURATION=$(cat &#x3C;&#x3C; EOF
   "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY_FOR_GIT",
   "githubPersonalAccessTokenForApiRateLimit": "$GITHUB_TOKEN",
   "githubWebhookSecret": "$GITHUB_SILL_WEBHOOK_SECRET",
-<strong>- "port": 8080,
-</strong><strong>+ "port": 3049
-</strong>- "isDevEnvironnement": true
+  "port": 3049
+- "isDevEnvironnement": true
 + "isDevEnvironnement": false
 }
 EOF
 ) 
 $@
-</code></pre>
+```
+{% endcode %}
 
+### Steps to be performed to put in production the latest version
+
+{% code title="ssh code.gouv.fr" %}
+```bash
+cd ~/sill/sill-api
+git fetch --tags
+LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+git checkout $LATEST_TAG
+yarn
+yarn build
+
+cd ~/sill/sill-web
+git fetch --tags
+LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+git checkout $LATEST_TAG
+yarn
+yarn build
+```
+{% endcode %}
+
+### Start the web app
+
+{% code title="ssh code.gouv.fr" %}
+```bash
+screen -S sill-api
+source ~/.bashrc
+cd ~/sill/sill-api
+yarn start
+# <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-api'
+```
+{% endcode %}
+
+{% code title="ssh code.gouv.fr" %}
+```bash
+screen -S sill-web
+cd ~/sill/sill-web
+serve -p 4048 -s build
+# <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-web'
+```
+{% endcode %}
