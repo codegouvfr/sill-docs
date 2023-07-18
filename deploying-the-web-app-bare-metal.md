@@ -32,9 +32,10 @@ ssh code.gouv.fr
 
 sudo apt-get update
 
-# Install node 20: https://github.com/nodesource/distributions#using-debian-as-root
+# Install node 18: https://github.com/nodesource/distributions#using-debian-as-root
+# Other node version will do just fine
 sudo su
-curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 exit
 
 sudo npm install -g yarn
@@ -84,7 +85,8 @@ export CONFIGURATION=$(cat &#x3C;&#x3C; EOF
   "githubWebhookSecret": "$GITHUB_SILL_WEBHOOK_SECRET",
 <strong>- "port": 8080,
 </strong><strong>+ "port": 3049
-</strong>  "isDevEnvironnement": true
+</strong>- "isDevEnvironnement": true
++ "isDevEnvironnement": false
 }
 EOF
 ) 
