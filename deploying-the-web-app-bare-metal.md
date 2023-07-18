@@ -53,7 +53,7 @@ git clone https://github.com/codegouvfr/sill
 cat << EOF >> ~/.bashrc
 export GITHUB_TOKEN=ghp_xxxxxx
 export KEYCLOAK_CODEGOUV_ADMIN_PASSWORD=xxxxxx
-export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25519"
+export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25xxxx"
 export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
 export GITHUB_SILL_WEBHOOK_SECRET=xxxxxxxx
 EOF
@@ -136,7 +136,7 @@ yarn start
 ```bash
 screen -S sill-web
 cd ~/sill/sill-web
-serve -p 4048 -s build
+serve -p 3048 -s build
 # <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-web'
 ```
 {% endcode %}
