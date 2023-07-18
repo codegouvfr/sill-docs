@@ -62,7 +62,7 @@ EOF
 ```
 {% endcode %}
 
-Edit the SILL api configuration:
+Edit the SILL api configuration `cd sill/sill-api && vim .env.local.sh`:
 
 {% code title="~/sill-api/.env.local.sh" %}
 ```diff
@@ -143,6 +143,10 @@ We checkout the latest tag, install the new dependencies (if any) and re-build.
 
 Don't forget to re-lauch the app afterward. &#x20;
 
+{% hint style="danger" %}
+This will restore the configurations. Accomodate for that.
+{% endhint %}
+
 {% code title="ssh code.gouv.fr" %}
 ```bash
 cd ~/sill/sill-api
@@ -156,6 +160,7 @@ cd ~/sill/sill-web
 git fetch --tags
 LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 git checkout $LATEST_TAG
+sed -i 's|https://xxx.yy|https://xxx.yy/sill|g' package.json
 yarn
 yarn build
 ```
