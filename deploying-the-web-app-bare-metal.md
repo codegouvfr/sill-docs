@@ -30,15 +30,13 @@ In this section we make the following assumption: &#x20;
 
 Here are steps that are to be perfomed only once, for setting up everything.
 
-{% code title="ssh code.gouv.fr" %}
-```bash
-
+<pre class="language-bash" data-title="ssh code.gouv.fr"><code class="lang-bash">
 sudo apt-get update
 
 # Install node 18: https://github.com/nodesource/distributions#using-debian-as-root
 # Other node version will do just fine
 sudo su
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &#x26;&#x26; apt-get install -y nodejs
 exit
 
 sudo npm install -g yarn
@@ -49,56 +47,30 @@ cd sill
 
 sudo apt-get install git
 git clone https://github.com/codegouvfr/sill-api
-git clone https://github.com/codegouvfr/sill
+git clone https://github.com/codegouvfr/sill-web
 
-# Don't forget to replace by the correct values!
-cat << EOF >> ~/.bashrc
-export GITHUB_TOKEN=ghp_xxxxxx
-export KEYCLOAK_CODEGOUV_ADMIN_PASSWORD=xxxxxx
-export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25xxxx"
-export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
-export GITHUB_SILL_WEBHOOK_SECRET=xxxxxxxx
+# Don't forget to replace by the correct values! 
+# (or at least everywhere there is "xxxx")
+cat &#x3C;&#x3C; EOF > sill-api/.env.local
+export SILL_KEYCLOAK_URL=https://auth.code.gouv.fr/auth
+export SILL_KEYCLOAK_REALM=codegouv
+export SILL_KEYCLOAK_CLIENT_ID=sill
+<strong>export SILL_KEYCLOAK_ADMIN_PASSWORD=xxxxxx
+</strong>export SILL_KEYCLOAK_ORGANIZATION_USER_PROFILE_ATTRIBUTE_NAME=agencyName
+export SILL_README_URL=https://git.sr.ht/~codegouvfr/logiciels-libres/blob/main/sill.md
+export SILL_TERMS_OF_SERVICE_URL=https://code.gouv.fr/sill/tos_fr.md
+export SILL_JWT_ID=sub
+export SILL_JWT_EMAIL=email
+export SILL_JWT_ORGANIZATION=organization
+export SILL_DATA_REPO_SSH_URL=git@github.com:codegouvfr/sill-data.git
+<strong>export SILL_SSH_NAME=id_ed25xxxxx
+</strong><strong>export SILL_SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
+</strong><strong>export SILL_GITHUB_TOKEN=ghp_xxxxxx
+</strong><strong>export SILL_WEBHOOK_SECRET=xxxxxxx
+</strong>export SILL_API_PORT=3084
+export SILL_IS_DEV_ENVIRONNEMENT=false
 EOF
-```
-{% endcode %}
-
-Edit the SILL api configuration `cd sill/sill-api && vim .env.local.sh`:
-
-{% code title="~/sill-api/.env.local.sh" %}
-```diff
-#!/bin/bash
-
-export CONFIGURATION=$(cat << EOF
-{
-  "keycloakParams": {
-    "url": "https://auth.code.gouv.fr/auth",
-    "realm": "codegouv",
-    "clientId": "sill",
-    "adminPassword": "$KEYCLOAK_CODEGOUV_ADMIN_PASSWORD",
-    "organizationUserProfileAttributeName": "agencyName"
-  },
-  "readmeUrl": "https://git.sr.ht/~codegouvfr/logiciels-libres/blob/main/sill.md",
-  "termsOfServiceUrl": "https://code.gouv.fr/sill/tos_fr.md",
-  "jwtClaimByUserKey": {
-    "id": "sub",
-    "email": "email",
-    "organization": "organization"
-  },
-- "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data-test.git",
-+ "dataRepoSshUrl": "git@github.com:codegouvfr/sill-test.git",
-  "sshPrivateKeyForGitName": "$SSH_PRIVATE_KEY_FOR_GIT_NAME",
-  "sshPrivateKeyForGit": "$SSH_PRIVATE_KEY_FOR_GIT",
-  "githubPersonalAccessTokenForApiRateLimit": "$GITHUB_TOKEN",
-  "githubWebhookSecret": "$GITHUB_SILL_WEBHOOK_SECRET",
-  "port": 3049
-- "isDevEnvironnement": true
-+ "isDevEnvironnement": false
-}
-EOF
-) 
-$@
-```
-{% endcode %}
+</code></pre>
 
 #### Ngnix configuration
 
@@ -143,10 +115,6 @@ We checkout the latest tag, install the new dependencies (if any) and re-build.
 
 Don't forget to re-lauch the app afterward. &#x20;
 
-{% hint style="danger" %}
-This will restore the configurations. Accomodate for that.
-{% endhint %}
-
 {% code title="ssh code.gouv.fr" %}
 ```bash
 cd ~/sill/sill-api
@@ -160,7 +128,6 @@ cd ~/sill/sill-web
 git fetch --tags
 LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 git checkout $LATEST_TAG
-sed -i 's|https://xxx.yy|https://xxx.yy/sill|g' package.json
 yarn
 yarn build
 ```
@@ -173,8 +140,8 @@ These are the step to start both the frontend and the backend respectively on po
 {% code title="ssh code.gouv.fr" %}
 ```bash
 screen -S sill-api
-source ~/.bashrc
 cd ~/sill/sill-api
+source .env.local
 yarn start
 # <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-api'
 ```

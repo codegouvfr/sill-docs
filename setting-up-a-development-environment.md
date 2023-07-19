@@ -2,12 +2,24 @@
 
 Makes sur to put the name of your SSH key and the private key (generated when you created the sill-data repo) in your `~/.bash_profile` example:
 
-```bash
-export GITHUB_TOKEN=ghp_xxxx # Optional Any GitHub PAT, only for API rate limit
-export KEYCLOAK_CODEGOUV_ADMIN_PASSWORD=xxxx # Optional
-export SSH_PRIVATE_KEY_FOR_GIT_NAME="id_ed25519" # It's explained in deploying the web app how to generate
-export SSH_PRIVATE_KEY_FOR_GIT="-----BEGIN OPENSSH PRIVATE KEY-----\nXXX\nXXX\nXXX\nXXX\nXXX\n-----END OPENSSH PRIVATE KEY-----\n"
-```
+<pre class="language-bash"><code class="lang-bash">export SILL_KEYCLOAK_URL=https://auth.code.gouv.fr/auth
+export SILL_KEYCLOAK_REALM=codegouv
+export SILL_KEYCLOAK_CLIENT_ID=sill
+<strong>export SILL_KEYCLOAK_ADMIN_PASSWORD=xxxxxx
+</strong>export SILL_KEYCLOAK_ORGANIZATION_USER_PROFILE_ATTRIBUTE_NAME=agencyName
+export SILL_README_URL=https://git.sr.ht/~codegouvfr/logiciels-libres/blob/main/sill.md
+export SILL_TERMS_OF_SERVICE_URL=https://code.gouv.fr/sill/tos_fr.md
+export SILL_JWT_ID=sub
+export SILL_JWT_EMAIL=email
+export SILL_JWT_ORGANIZATION=organization
+export SILL_DATA_REPO_SSH_URL=git@github.com:codegouvfr/sill-data-test.git
+<strong>export SILL_SSH_NAME=id_ed25xxxxx
+</strong>export SILL_SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n"
+<strong>export SILL_GITHUB_TOKEN=ghp_xxxxxx
+</strong><strong>export SILL_WEBHOOK_SECRET=xxxxxxx
+</strong>export SILL_API_PORT=3084
+export SILL_IS_DEV_ENVIRONNEMENT=true
+</code></pre>
 
 You'll need [Node](https://nodejs.org/) and [Yarn 1.x](https://classic.yarnpkg.com/lang/en/). (Find [here](https://docs.gitlanding.dev/#step-by-step-guide) instructions by OS on how to install them)
 
