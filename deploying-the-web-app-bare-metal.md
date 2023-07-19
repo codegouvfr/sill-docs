@@ -95,13 +95,13 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/code.gouv.fr/privkey.pem;
 
     location ~ ^/sill/api {
-        proxy_pass http://localhost:3049;
+        proxy_pass http://localhost:3084;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
     location ~ ^/sill {
-        proxy_pass http://localhost:3048;
+        proxy_pass http://localhost:3083;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
@@ -151,7 +151,7 @@ yarn start
 ```bash
 screen -S sill-web
 cd ~/sill/sill-web
-serve -p 3048 -s build
+serve -p 3083 -s build
 # <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-web'
 ```
 {% endcode %}
