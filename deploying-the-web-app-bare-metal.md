@@ -4,6 +4,8 @@ This are the instructions for deploying the web app "bare metal", without Helm, 
 \
 Unlike the guide for deploying on Kubernetes where we deploy the SILL at the root of a domain, `sill.code.gouv.fr`, in this guide we deploy under a sub path: `code.gouv.fr/sill`.
 
+> Reminder for the Keycloak administrator: Don't forget to add `https://code.gouv.fr/sill*` to the list of valid redirect URIs in your Keycloak client configuration.  
+
 In this section we make the following assumption: &#x20;
 
 *   You have a Keycloak server running somewhere. You have
@@ -94,26 +96,50 @@ server {
     ssl_certificate /etc/letsencrypt/live/code.gouv.fr/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/code.gouv.fr/privkey.pem;
 
+    #
+    # SILL specific configuration
+    #
+
     location ~ ^/sill/api {
         proxy_pass http://localhost:3084;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-    location ~ ^/sill {
-        proxy_pass http://localhost:3083;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    # Cache assets in the static directory for 1 year
+    location ~ ^/sill/static/(.+\..+)$ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public";
+        root /home/admin/sill/sill-web/build;
+        try_files /static/$1 =404;
     }
+
+    # Serve other asset files directly
+    location ~ ^/sill/(.+\..+)$ {
+        root /home/admin/sill/sill-web/build;
+        try_files /$1 =404;
+    }
+
+    # Match /sill and any subpaths, and always serve the index.html file
+    location ~ ^/sill(/.*)?$ {
+        root /home/admin/sill/sill-web/build;
+        try_files /index.html =404;
+    }
+
+    #
+    # End of SILL specific configuration
+    #
+
 }
 ```
 
 ### Update & build
 
-This is the protocoll to follow whenever a new version of the sill have been published.  \
+This is the protocol to follow whenever a new version of the sill have been published.  \
 We checkout the latest tag, install the new dependencies (if any) and re-build.
 
-Don't forget to re-lauch the app afterward. &#x20;
+Don't forget to re-launch the app afterward. &#x20;
 
 {% code title="ssh code.gouv.fr" %}
 ```bash
@@ -130,6 +156,7 @@ LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
 git checkout $LATEST_TAG
 yarn
 yarn build
+sudo chown -R admin:www-data build
 ```
 {% endcode %}
 
@@ -144,14 +171,5 @@ cd ~/sill/sill-api
 source .env.local
 yarn start
 # <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-api'
-```
-{% endcode %}
-
-{% code title="ssh code.gouv.fr" %}
-```bash
-screen -S sill-web
-cd ~/sill/sill-web
-serve -p 3083 -s build
-# <CTRL>+A to exit the screen session, it can be restores with 'screen -r sill-web'
 ```
 {% endcode %}
