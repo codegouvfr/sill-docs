@@ -23,7 +23,7 @@ export SILL_IS_DEV_ENVIRONNEMENT=true
 
 You'll need [Node](https://nodejs.org/) and [Yarn 1.x](https://classic.yarnpkg.com/lang/en/). (Find [here](https://docs.gitlanding.dev/#step-by-step-guide) instructions by OS on how to install them)
 
-It is much easyer to navigate the code with VSCode (We recommend the free distribution [VSCodium](https://sill.code.gouv.fr/software?name=VSCodium)).
+It is much easier to navigate the code with VSCode (We recommend the free distribution [VSCodium](https://code.gouv.fr/sill/software?name=VSCodium)).
 
 ```bash
 #Only the first time

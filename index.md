@@ -1,15 +1,18 @@
 ---
-description: Hub for everything about the application behind sill.code.gouv.fr
+description: Hub for everything about the application behind code.gouv.fr/sill
 ---
 
 # 🎯 Index
 
 ### Deployment
 
+Bare metal:
+
+* Prod: [https://code.gouv.fr/sill](https://code.gouv.fr/sill)
+
 Via [codegouvfr/paris-sspcloud](https://github.com/codegouvfr/paris-sspcloud)
 
-* Prod:        [apps/sill](https://github.com/codegouvfr/paris-sspcloud/tree/main/apps/sill)               -> [https://sill.code.gouv.fr](https://sill.code.gouv.fr)
-* Preprod:  [apps/sill-preprod](https://github.com/codegouvfr/paris-sspcloud/tree/main/apps/sill-preprod) -> [https://sill-preprod.lab.sspcloud.fr](https://sill-preprod.lab.sspcloud.fr)&#x20;
+* Preprod: [apps/sill-preprod](https://github.com/codegouvfr/paris-sspcloud/tree/main/apps/sill-preprod) -> [https://sill-preprod.lab.sspcloud.fr](https://sill-preprod.lab.sspcloud.fr)&#x20;
 
 ### Source code
 
