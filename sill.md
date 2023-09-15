@@ -3,28 +3,14 @@ title: Le Socle interministériel de Logiciels Libres
 toc: true
 ---
 
+## Pourquoi ce catalogue ?
+
 Le socle interministériel de logiciels libres (SILL) est le catalogue
 de référence des logiciels libres recommandés par l'Etat pour toute
 l'administration.
 
-Il est publié par la [mission logiciels libres](https://code.gouv.fr)
-de la ([DINUM](https://www.numerique.gouv.fr)) sur le site
-[code.gouv.fr/sill](https://code.gouv.fr/sill).
-
-Il est construit de façon collaborative par une communauté d'agents
-publics qui se proposent comme référents, experts techniques ou non,
-ou se déclarent utilisateurs.
-
-Ces agents publics peuvent être des agents des trois fonctions
-publiques : d'État, hospitalière et territoriale.
-
-Pour toute question, vous pouvez écrire à la mission logiciels libres
-qui anime cette communauté : <sill@code.gouv.fr>
-
-# Pourquoi ce catalogue ?
-
-Le SILL aide les administrations à s'y retrouver dans les logiciels
-libres dont elles doivent considérer l'utilisation, en respect de
+Ce catalogue aide les administrations à s'y retrouver dans les
+logiciels libres qu'elles sont encouragées à utiliser, suivant
 [l'article 16 de la loi pour une République
 numérique](https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033205068) :
 
@@ -36,7 +22,18 @@ numérique](https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033205068)
 > l'achat ou de l'utilisation, de tout ou partie, de ces systèmes
 > d'information. »
 
-# Les critères d'entrée d'un logiciel dans le SILL
+Il est publié par la [mission logiciels libres](https://code.gouv.fr)
+de la ([DINUM](https://www.numerique.gouv.fr)) sur le site
+[code.gouv.fr/sill](https://code.gouv.fr/sill).  Il est construit de
+façon collaborative par une communauté d'agents publics qui se
+proposent comme référents, experts techniques ou non, ou se déclarent
+utilisateurs.  Ces agents publics peuvent être des agents des trois
+fonctions publiques : d'État, hospitalière et territoriale.
+
+Pour toute question, vous pouvez écrire à la mission logiciels libres
+qui anime cette communauté : <sill@code.gouv.fr>
+
+## Les critères d'entrée d'un logiciel dans le SILL
 
 Pour qu'un logiciel libre figure au SILL :
 
@@ -65,7 +62,7 @@ contenus](https://code.gouv.fr/sill/detail?name=Drupal)) : les
 référents SILL travaillent à faire évoluer le SILL de façon à ce que
 ce catalogue aide à choisir entre ces solutions multiples.
 
-# Comment ajouter un logiciel libre dans le SILL ?
+## Comment ajouter un logiciel libre dans le SILL ?
 
 Pour qu'un logiciel soit référencé dans le SILL, il faut qu'un ou
 plusieurs agents publics se portent volontaires pour en être les
@@ -76,9 +73,9 @@ Pour devenir référent ou utilisateur SILL, créez un compte sur
 soit ajouter un nouveau logiciel libre, soit vous ajouter comme
 référent ou utilisateur d'un logiciel libre déjà présent.
 
-# Que signifie être « référent » d'un logiciel ?
+## Que signifie être « référent » d'un logiciel ?
 
-## Qui peut être « référent SILL » ?
+### Qui peut être « référent SILL » ?
 
 **Tout agent public** titulaire ou contractuel travaillant dans un
 organisme public de l'une des trois fonctions publiques peut être
@@ -94,7 +91,7 @@ Les référents doivent s'inscrire avec leur adresse mail nominative :
 les adresses fonctionnelles (du type sill@ministere.gouv.fr) ne sont
 pas admises.
 
-## Quels sont les tâches du référent ?
+### Quels sont les tâches du référent ?
 
 **Le référent :**
 
@@ -112,13 +109,13 @@ pas admises.
 5.  cherche un référent pour le remplacer s'il vient à ne plus pouvoir
     être référent.
 
-## Qui a accès au référent SILL d'un logiciel ?
+### Qui a accès au référent SILL d'un logiciel ?
 
 Seules les personnes inscrites sur le site
 [code.gouv.fr/sill](https://sill.code.gouv.fr/sill) peuvent accéder
 aux courriels des référents et utilisateurs SILL.
 
-# Licence des données du SILL
+## Licence des données du SILL
 
 Le SILL est publié par les groupes de mutualisation interministérielle
 sous [licence Ouverte
