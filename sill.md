@@ -7,14 +7,16 @@ Le socle interministériel de logiciels libres (SILL) est le catalogue
 de référence des logiciels libres recommandés par l'Etat pour toute
 l'administration.
 
-Il est publié par la [mission logiciels libres](https://code.gouv.fr/)
-de la ([DINUM](https://www.numerique.gouv.fr/)) sur le site
+Il est publié par la [mission logiciels libres](https://code.gouv.fr)
+de la ([DINUM](https://www.numerique.gouv.fr)) sur le site
 [code.gouv.fr/sill](https://code.gouv.fr/sill).
 
 Il est construit de façon collaborative par une communauté d'agents
-publics, les « référents SILL ».  Ces agents publics peuvent être des
-agents des trois fonctions publiques : d'État, hospitalière et
-territoriale.
+publics qui se proposent comme référents, experts techniques ou non,
+ou se déclarent utilisateurs.
+
+Ces agents publics peuvent être des agents des trois fonctions
+publiques : d'État, hospitalière et territoriale.
 
 Pour toute question, vous pouvez écrire à la mission logiciels libres
 qui anime cette communauté : <sill@code.gouv.fr>
@@ -67,12 +69,12 @@ ce catalogue aide à choisir entre ces solutions multiples.
 
 Pour qu'un logiciel soit référencé dans le SILL, il faut qu'un ou
 plusieurs agents publics se portent volontaires pour en être les
-*référents*.
+*référents* ou les *utilisateurs*.
 
-Pour devenir référent SILL, créez un compte sur
+Pour devenir référent ou utilisateur SILL, créez un compte sur
 [code.gouv.fr/sill](https://code.gouv.fr/sill). De là, vous pouvez
 soit ajouter un nouveau logiciel libre, soit vous ajouter comme
-référent d'un logiciel libre déjà présent.
+référent ou utilisateur d'un logiciel libre déjà présent.
 
 # Que signifie être « référent » d'un logiciel ?
 
@@ -113,23 +115,8 @@ pas admises.
 ## Qui a accès au référent SILL d'un logiciel ?
 
 Seules les personnes inscrites sur le site
-[code.gouv.fr/sill](https://sill.code.gouv.fr/sill) peuvent accéder aux
-courriels des référents SILL.
-
-# Documentation des cas d'usage (fiches SILL « cas d'usage »)
-
-À la saisie d'une fiche SILL, il est demandé au référent de présenter
-rapidement le cas d'usage du logiciel dans son administration ou sur
-son poste de travail.
-
-Si les référents d'un logiciel le souhaitent, ils peuvent proposer une
-fiche détaillée plus complète en contribuant à ce wiki.
-
-# Documentation des logiciels libres présents dans un SI (fiches SILL « SI-LL »)
-
-Les référents qui le souhaitent peuvent proposer une fiche « SI-LL »
-pour décrire les logiciels libres présents dans leur SI, avec des
-liens vers le SILL pour les logiciels libres déjà référencés au SILL.
+[code.gouv.fr/sill](https://sill.code.gouv.fr/sill) peuvent accéder
+aux courriels des référents et utilisateurs SILL.
 
 # Licence des données du SILL
 
