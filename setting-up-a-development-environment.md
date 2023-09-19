@@ -58,11 +58,11 @@ yarn start
 #The app is running on http://localhost:3000
 ```
 
-### Deploying changes in production
+### Releasing a new version
 
 #### Frontend (sill-web)
 
-Update [the package.json version number](https://github.com/codegouvfr/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L4) and push.
+Update [the package.json version number](https://github.com/codegouvfr/sill-web/blob/faeeb89792ee1174fd345717a94ca6677a2adb42/package.json#L4) and push.  
 
 #### Backend (sill-api)
 
