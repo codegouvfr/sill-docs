@@ -38,8 +38,9 @@ qui anime cette communauté : <sill@code.gouv.fr>
 Pour qu'un logiciel libre figure au SILL :
 
 -   Son code source doit être publié sous l'une des [licences libres
-    acceptées](../doc_externe/licences-libres-dinum.md), sans délai entre la
-    publication du code source et celle des fichiers exécutables.
+    acceptées](https://code.gouv.fr/fr/doc/licences-libres-dinum/),
+    sans délai entre la publication du code source et celle des
+    fichiers exécutables.
 
 -   Il doit être déployé par la DSI d'un établissement public ou
     installé par un agent public sur son poste de travail.
