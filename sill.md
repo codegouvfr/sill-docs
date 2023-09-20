@@ -83,11 +83,6 @@ organisme public de l'une des trois fonctions publiques peut être
 référent d'un logiciel libre dont il a l'usage sur son poste de
 travail ou dont il connaît l'usage dans son administration.
 
-Les référents SILL sont inscrits à la liste de discussion
-`sill-mainteneurs@groupes.renater.fr`.  S'ils le souhaitent, ils
-peuvent s'en désinscrire eux-mêmes ou demander à
-`sill@code.gouv.fr` de les désinscrire.
-
 Les référents doivent s'inscrire avec leur adresse mail nominative :
 les adresses fonctionnelles (du type sill@ministere.gouv.fr) ne sont
 pas admises.
