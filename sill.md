@@ -50,11 +50,6 @@ référencés à condition que l'administration soit techniquement ou
 administrativement en charge des serveurs où sont déployés les
 logiciels.
 
-Les prestataires ou éditeurs de solutions *SaaS* s'appuyant sur des
-logiciels libres hébergés sur des serveurs que l'administration ne
-gère pas sont invités à référencer leurs solutions dans le catalogue
-[GouvTech](https://catalogue.numerique.gouv.fr/).
-
 Plusieurs logiciels aux fonctionnalités similaires peuvent figurer
 dans le SILL (voir par exemple ces [éditeurs de
 texte](https://code.gouv.fr/sill/detail?name=GNU%20Emacs), ou ces
