@@ -113,8 +113,8 @@ pas admises.
 ### Qui a accès au référent SILL d'un logiciel ?
 
 Seules les personnes inscrites sur le site
-[code.gouv.fr/sill](https://sill.code.gouv.fr/sill) peuvent accéder
-aux courriels des référents et utilisateurs SILL.
+[code.gouv.fr/sill](https://code.gouv.fr/sill) peuvent accéder aux
+courriels des référents et utilisateurs SILL.
 
 ## Licence des données du SILL
 
