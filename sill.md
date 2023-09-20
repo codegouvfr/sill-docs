@@ -103,11 +103,7 @@ pas admises.
 3.  accepte d'être contacté par courriel par d'autres agents publics
     inscrits sur le site
     [code.gouv.fr/sill](https://code.gouv.fr/sill) ;
-4.  peut demander à être inscrit à [la liste de discussion des
-    mainteneurs du
-    SILL](https://groupes.renater.fr/sympa/info/sill-mainteneurs) et
-    participer aux réunions des mainteneurs du SILL ;
-5.  cherche un référent pour le remplacer s'il vient à ne plus pouvoir
+4.  cherche un référent pour le remplacer s'il vient à ne plus pouvoir
     être référent.
 
 ### Qui a accès au référent SILL d'un logiciel ?
