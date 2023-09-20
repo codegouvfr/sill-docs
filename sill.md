@@ -37,13 +37,8 @@ qui anime cette communauté : <sill@code.gouv.fr>
 
 Pour qu'un logiciel libre figure au SILL :
 
--   Son code source doit être publié sous l'une des [licences libres
-    acceptées](https://code.gouv.fr/fr/doc/licences-libres-dinum/),
-    sans délai entre la publication du code source et celle des
-    fichiers exécutables.
-
--   Il doit être déployé par la DSI d'un établissement public ou
-    installé par un agent public sur son poste de travail.
+- Son code source doit être publié sous l'une des [licences libres acceptées](https://code.gouv.fr/fr/doc/licences-libres-dinum/), sans délai entre la publication du code source et celle des fichiers exécutables.
+- Il doit être déployé par la DSI d'un établissement public ou installé par un agent public sur son poste de travail.
 
 Les logiciels libres utilisés en *Software as a Service* peuvent être
 référencés à condition que l'administration soit techniquement ou
@@ -86,15 +81,10 @@ pas admises.
 
 **Le référent :**
 
-1.  atteste de l'usage d'un logiciel libre dans son administration ou
-    sur son poste de travail ;
-2.  contribue à tenir à jour les informations utiles sur le logiciel
-    (version minimale recommandée, fiche, etc.) ;
-3.  accepte d'être contacté par courriel par d'autres agents publics
-    inscrits sur le site
-    [code.gouv.fr/sill](https://code.gouv.fr/sill) ;
-4.  cherche un référent pour le remplacer s'il vient à ne plus pouvoir
-    être référent.
+1.  atteste de l'usage d'un logiciel libre dans son administration ou sur son poste de travail ;
+2.  contribue à tenir à jour les informations utiles sur le logiciel (version minimale recommandée, fiche, etc.) ;
+3.  accepte d'être contacté par courriel par d'autres agents publics inscrits sur le site [code.gouv.fr/sill](https://code.gouv.fr/sill) ;
+4.  cherche un référent pour le remplacer s'il vient à ne plus pouvoir être référent.
 
 ### Qui a accès au référent SILL d'un logiciel ?
 
