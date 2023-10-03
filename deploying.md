@@ -1,10 +1,8 @@
-# 🏁 Deploying the web App (Kubernetes)
-
 This is a step by step guide for deploying sill.code.gouv.fr
 
-### The Git based Database
+## The Git based Database
 
-#### Context
+### Context
 
 The data are stored in a [git based database](https://github.com/codegouvfr/sill-data-template).
 
@@ -15,12 +13,12 @@ There is a bidirectional relationship betwen the Web App and the Data repo, when
 
 The scrapping and update of the build branch is performed [once every four hour](https://github.com/codegouvfr/sill-api/blob/08c3c36b7e885fa1867e25fb30364f5a15c6c39f/src/core/usecases/readWriteSillData.ts#L155-L158) and [whenever there is a commit on the main branch](https://github.com/codegouvfr/sill-data-template/blob/41933d7ad1dc99ed1daa15fbebf9307b5b9c1ba5/.github/workflows/ci.yaml#L3-L5).
 
-#### Instantiating a new database instance
+### Instantiating a new database instance
 
 * Click on the green button "_use this template_" and call it `sill-data`
 * Check "_Include all branches"_
 
-### Provison a Kubernetes cluster
+## Provison a Kubernetes cluster
 
 Currently we use the SSPCloud to deploy the SILL but if you have to deploy from scratch here is how provison and setup a Kubernetes cluser from a cloud provider.
 
@@ -30,29 +28,27 @@ Pick one of the three and follow the guide.
 
 You can stop after the [configure kubectl section](https://learn.hashicorp.com/tutorials/terraform/eks#configure-kubectl).
 
-{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks" %}
+* https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
+* https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke?in=terraform%2Fkubernetes
+* https://developer.hashicorp.com/terraform/tutorials/kubernetes/aks?in=terraform%2Fkubernetes
 
-{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/gke?in=terraform%2Fkubernetes" %}
-
-{% embed url="https://developer.hashicorp.com/terraform/tutorials/kubernetes/aks?in=terraform%2Fkubernetes" %}
-
-### Installing an ingress controller
+## Installing an ingress controller
 
 Deploy an ingress controller on your cluster:
 
-{% hint style="warning" %}
-The following command is [for AWS](https://kubernetes.github.io/ingress-nginx/deploy/#aws).
-
-For GCP use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#gce-gke).
-
-For Azure use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#azure).
-{% endhint %}
+> :warning: 
+> 
+> The following command is [for AWS](https://kubernetes.github.io/ingress-nginx/deploy/#aws).
+>
+> For GCP use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#gce-gke).
+>
+> For Azure use [this command](https://kubernetes.github.io/ingress-nginx/deploy/#azure).
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/aws/deploy.yaml
 ```
 
-### Setting up the DSN
+## Setting up the DSN
 
 Now you need to get the external address of your cluster, run the command
 
@@ -77,17 +73,17 @@ If the address you got was an IPv4 (`x.x.x.x`), create a `A` record instead of a
 
 If the address you got was ans IPv6 (`y:y:y:y:y:y:y:y`), create a `AAAA` record.
 
-### Creating a namespace for our apps
+## Creating a namespace for our apps
 
 ```bash
 kubectl create namespace projet-codegouv
 ```
 
-### SSL
+## SSL
 
-{% embed url="https://github.com/codegouvfr/paris-sspcloud/tree/main/cert-manager" %}
+https://github.com/codegouvfr/paris-sspcloud/tree/main/cert-manager
 
-### Installing Keycloak
+## Installing Keycloak
 
 ```bash
 helm repo add codecentric https://codecentric.github.io/helm-charts
@@ -258,7 +254,8 @@ Go to **Realm Settings** (on the left panel) -> Tab **User Profile** (this tab s
 
 Now you can edit the file as suggested in the following DIFF snippet. Be mindful that in this example we only allow emails @gmail.com and @hotmail.com to register you want to edit that.
 
-<pre class="language-diff"><code class="lang-diff"> {
+```
+{
    "attributes": [
      {
        "name": "email",
@@ -269,8 +266,8 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
            "max": 255
          },
 +       "pattern": {
-<strong>+         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
-</strong>+      }
++         "pattern": "^[^@]+@([^.]+\\.)*((gmail\\.com)|(hotmail\\.com))$"
++      }
        },
        "permissions": {
          "view": [],
@@ -280,8 +277,8 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
          "scopes": []
        }
      },
-<strong>+    {
-</strong>+      "selector": {
++    {
++      "selector": {
 +        "scopes": []
 +      },
 +      "permissions": {
@@ -306,11 +303,11 @@ Now you can edit the file as suggested in the following DIFF snippet. Be mindful
 +   }
    ]
  }
-</code></pre>
+```
 
-{% hint style="info" %}
-We create the User Profile Attribute "agencyName" instead of organization because of legacy reasons. Our database of user use this name and we can't migrate.
-{% endhint %}
+> :information_source:
+> 
+> We create the User Profile Attribute "agencyName" instead of organization because of legacy reasons. Our database of user use this name and we can't migrate.
 
 Finally you need to create mapper so that agencyName appears in the JWT.
 
@@ -322,9 +319,9 @@ Go to clients -> sill -> Mappers
 * Token claim name: `organization`
 * Claim JSON type: `string`
 
-#### Enabeling AgentConnect
+### Enabeling AgentConnect
 
-![](<.gitbook/assets/image (3).png>)
+![](./assets/agent_connect.png)
 
 To enable agent connect you need to use [this extention](https://github.com/InseeFr/Keycloak-FranceConnect#agent-connect) (I's already loaded in your Keycloak if you look carefully in your `keycloak-values.yaml` file. )
 
@@ -346,9 +343,9 @@ You'll also need to create a mapper for organizational\_unit -> agencyName.
 
 To do so, go to Identity Providers -> Agent Connect -> Mappers -> create
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+![](assets/agent_connect-2.png)
 
-### Instantiating the web app
+## Instantiating the web app
 
 First of all you need to enable SSH autentication via private/public key on GitHub (or whatever platfrom you're using):
 
@@ -425,14 +422,14 @@ EOF
 helm install sill codegouvfr/sill -f sill-values.yaml -n projet-sill
 ```
 
-### Enabling web hooks
+## Enabling web hooks
 
 By default the web app periodically checks the data repo for update.
 
 If you want, and if you data repo is hosted on GitHub you can enable a Webhook that will ping the web app whenever there is an update.
 
-<figure><img src=".gitbook/assets/Untitled.png" alt=""><figcaption></figcaption></figure>
+![](./assets/webhook.png)
 
 Type some random string as secret. You then need to provide it to `sill-api` so it know it can trust the ping to be genuin (you can do that later, for now just write down the secret).
 
-<figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+![](./assets/webhook-2.png)

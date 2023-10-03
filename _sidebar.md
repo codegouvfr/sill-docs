@@ -1,5 +1,3 @@
-# Table of contents
-
 * [ℹ README](README.md)
 * [🎯 Index](index.md)
 * [🏁 Deploying the web App (Kubernetes)](deploying.md)
