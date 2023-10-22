@@ -242,6 +242,10 @@ You can now login to the **administration console** of **https://sill-auth.my-do
       2. _Email theme_: **dsfr**
       3. _Internationalization_: **Enabled**
       4. _Supported locales_: **en fr**
+    5. On the tab Token
+       1. SSO Session Idle: 14 days - This setting and the following two are so that when the user click "remember me" when he logs in, he dosen't have to loggin again for the next two weeks.
+       2. SSO Session Idle Remember Me: 14 days
+       3. SSO Session Max Remember Me: 14 days
 2. Create a client called "sill"
    1. _Root URL_: **https://sill.code.gouv.fr/**
    2. _Valid redirect URIs_: **https://sill.code.gouv.fr/\* ( and http://localhost\* for developpement)**
