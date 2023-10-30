@@ -18,9 +18,9 @@ The scrapping and update of the build branch is performed [once every four hour]
 * Click on the green button "_use this template_" and call it `sill-data`
 * Check "_Include all branches"_
 
-## Provison a Kubernetes cluster
+## Provisioning a Kubernetes cluster
 
-Currently we use the SSPCloud to deploy the SILL but if you have to deploy from scratch here is how provison and setup a Kubernetes cluser from a cloud provider.
+Currently we use the SSPCloud to deploy the SILL but if you have to deploy from scratch here is how to provision and setup a Kubernetes cluster on a cloud provider.
 
 [Hashicorp](https://www.hashicorp.com/) maintains great tutorials for [terraforming](https://www.terraform.io/) Kubernetes clusters on [AWS](https://aws.amazon.com/what-is-aws/), [GCP](https://cloud.google.com/) or [Azure](https://acloudguru.com/videos/acg-fundamentals/what-is-microsoft-azure).
 
@@ -323,7 +323,7 @@ Go to clients -> sill -> Mappers
 * Token claim name: `organization`
 * Claim JSON type: `string`
 
-### Enabeling AgentConnect
+### Enabling AgentConnect
 
 ![](./assets/agent_connect.png)
 
@@ -426,7 +426,7 @@ EOF
 helm install sill codegouvfr/sill -f sill-values.yaml -n projet-sill
 ```
 
-## Enabling web hooks
+## Enabling webhooks
 
 By default the web app periodically checks the data repo for update.
 
