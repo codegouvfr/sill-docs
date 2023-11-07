@@ -23,3 +23,5 @@ En 2019, le SILL a été publié sous forme d'une application web à l'adresse h
 En 2022, le SILL a été repensé pour permettre aux agents publics de référencer eux-mêmes des logiciels libres ou de contacter directement l'agent public référent d'un logiciel.  Cette nouvelle version a également vocation de permettre aux agents inscrits des logiciels au sein même de leur navigateur.
 
 [Summary](_sidebar.md)
+
+Ce site de documentation utilise [docsify-dsfr-template](https://github.com/codegouvfr/docsify-dsfr-template).
