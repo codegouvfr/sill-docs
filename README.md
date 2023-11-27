@@ -1,6 +1,4 @@
-# ℹ README
-
-**Le problème à résoudre**
+# Le problème
 
 Les administrations sont encouragées par la loi pour une République numérique à privilégier des logiciels libres pour préserver « la maîtrise, la pérennité et l'indépendance de leurs systèmes d'information » (cf. [Article 16](https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033205068)).
 
@@ -10,7 +8,7 @@ La mise en oeuvre de la loi exige que les administrations puissent se renseigner
 
 Le SILL, Socle Interministeriel de Logiciel Libre, s'attaque à ce problème de partage de l'information.
 
-**Historique**
+# Historique
 
 Le SILL était à l'origine une liste sous format PDF qui était mise à jour tous les ans par les groupes MIM (Mutualisation InterMinistérielle).
 
@@ -25,3 +23,11 @@ En 2022, le SILL a été repensé pour permettre aux agents publics de référen
 [Summary](_sidebar.md)
 
 Ce site de documentation utilise [docsify-dsfr-template](https://github.com/codegouvfr/docsify-dsfr-template).
+
+# Contribuer
+
+Voir [CONTRIBUTING.md](CONTRIBUTING.md).
+
+# Licence
+
+Les contenus de ce dépôt de documentation sont publiés sous [licence Ouverte Etalab 2.0](LICENSES/LICENSE.Etalab-2.0.md).
