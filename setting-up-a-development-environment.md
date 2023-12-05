@@ -1,4 +1,11 @@
-Makes sur to put the name of your SSH key and the private key (generated when you created the sill-data repo) in your `~/.bash_profile` example:
+## Defining the sill-api parameter
+
+There are two way to provide the parameter required to run `sill-api`.  
+You can either sourcing environement variables or edit the `.env.local.sh` file.  
+
+### Option 1: Sourcing environement variables
+
+Makes sure to put the name of your SSH key and the private key (generated when you created the sill-data repo) in your `~/.bash_profile` example:
 
 ```
 export SILL_KEYCLOAK_URL=https://auth.code.gouv.fr/auth
@@ -18,6 +25,47 @@ export SILL_GITHUB_TOKEN=ghp_xxxxxx
 export SILL_WEBHOOK_SECRET=xxxxxxx
 export SILL_API_PORT=3084
 export SILL_IS_DEV_ENVIRONNEMENT=true
+```
+
+### Option 2: Editing `.env.local.sh`
+
+If you dont like having to source thoses env variables you can prvide them
+by editing the `.env.local.sh` at the root of the `sill-api` project.  
+
+> Skip to the next step and come back here once you'll have cloned the projects.  
+
+`~/sill/sill-api/.env.local.sh`
+```sh
+#!/bin/bash
+
+export CONFIGURATION=$(cat << EOF
+{
+  "keycloakParams": {
+    "url": "https://auth.code.gouv.fr/auth",
+    "realm": "codegouv",
+    "clientId": "sill",
+    "adminPassword": "xxxxxx",
+    "organizationUserProfileAttributeName": "agencyName"
+  },
+  "readmeUrl": "https://git.sr.ht/~codegouvfr/logiciels-libres/blob/main/sill.md",
+  "termsOfServiceUrl": "https://code.gouv.fr/sill/tos_fr.md",
+  "jwtClaimByUserKey": {
+    "id": "sub",
+    "email": "email",
+    "organization": "organization"
+  },
+  "dataRepoSshUrl": "git@github.com:codegouvfr/sill-data-test.git",
+  "sshPrivateKeyForGitName": "id_ed25xxxxx",
+  "sshPrivateKeyForGit": "-----BEGIN OPENSSH PRIVATE KEY-----\nxxxx\nxxxx\nxxxx\nAxxxx\nxxxx\n-----END OPENSSH PRIVATE KEY-----\n",
+  "githubPersonalAccessTokenForApiRateLimit": "ghp_xxxxxx",
+  "githubWebhookSecret": "xxxxxxx",
+  "port": 3084,
+  "isDevEnvironnement": true
+}
+EOF
+) 
+
+$@
 ```
 
 You'll need [Node](https://nodejs.org/) and [Yarn 1.x](https://classic.yarnpkg.com/lang/en/). (Find [here](https://docs.gitlanding.dev/#step-by-step-guide) instructions by OS on how to install them)
