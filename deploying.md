@@ -131,7 +131,8 @@ extraInitContainers: |
       - |
         curl -L -f -S -o /extensions/keycloak-franceconnect-4.2.0.jar https://github.com/InseeFr/Keycloak-FranceConnect/releases/download/4.2.0/keycloak-franceconnect-4.2.0.jar
         # Here be carefull, the version number should match the version of sill-web in production.
-        curl -L -f -S -o /extensions/sill-web.jar https://github.com/codegouvfr/sill-web/releases/download/v0.0.1/keycloak-theme.jar
+        # Also note that if you are deploying Keycloak 23 or later you should remove the "retrocompat-" in the url below. Keycloak 22 is not supported.  
+        curl -L -f -S -o /extensions/sill-web.jar https://github.com/codegouvfr/sill-web/releases/download/v1.40.3/retrocompat-keycloak-theme.jar
     volumeMounts:
       - name: extensions
         mountPath: /extensions
